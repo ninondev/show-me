@@ -1,0 +1,52 @@
+[
+  {
+    "id": "fact",
+    "environment": "Text replies and an inline renderer are available.",
+    "request": "How many seconds are in three minutes?"
+  },
+  {
+    "id": "comparison",
+    "environment": "Markdown tables and question cards are available. The facts below are a synthetic example; no research is needed.",
+    "request": "Compare Plan A ($10/month, 5 projects, cancel any month) and Plan B ($96/year, 20 projects, billed annually with no refund). I need 4 projects for a 2-month job. Which would you choose?"
+  },
+  {
+    "id": "interactive",
+    "environment": "An inline renderer is available. Its local documentation supplies the required markup and output directive. Display controls can update locally, and a separate follow-up API can send a new chat message.",
+    "request": "Show me how a workshop's total cost changes with attendance. The room costs $120 and materials cost $8 per person. Start with 12 attendees and let me try 0 to 30. These are example prices."
+  },
+  {
+    "id": "requested-file",
+    "environment": "The agent can write Markdown files in its task folder. It can also draw inline.",
+    "request": "Create a Markdown report I can send to my team. Use only these example figures: April 12 signups, May 18, June 15. Include the monthly counts and the total."
+  },
+  {
+    "id": "visual-choice",
+    "environment": "An inline preview tool is available. The question-card tool accepts text options only. The user has asked for two proposals, so drafting the proposals is authorized.",
+    "request": "Show two structurally different layouts for a weekly agenda before I choose. Each must show Monday through Friday and an unscheduled-task list. Keep colors neutral."
+  },
+  {
+    "id": "mermaid-source",
+    "environment": "This terminal prints Markdown as text. Mermaid is not rendered.",
+    "request": "Give me Mermaid source for this flow: upload, validate, save. On validation failure, ask for another upload."
+  },
+  {
+    "id": "terminal-diagram",
+    "environment": "This terminal supports plain text only. There is no inline renderer, browser, or opener.",
+    "request": "Draw the upload process so I can understand it: upload, validate, save; validation failure returns to upload."
+  },
+  {
+    "id": "unanswered-choice",
+    "environment": "The user must choose a layout before implementation. Two previews were shown. The question-card call has returned no answer, and no new user message has arrived.",
+    "request": "Continue from the unanswered card. One option was marked recommended."
+  },
+  {
+    "id": "missing-data",
+    "environment": "Charts can be rendered. No sales files or connected data source are available.",
+    "request": "Chart our monthly sales from January through June."
+  },
+  {
+    "id": "open-result",
+    "environment": "A macOS shell opener is available. The fictional file '/work/Workshop Summary.html' exists. The opener has returned exit code 0. There is no screen or browser state inspection.",
+    "request": "Tell me whether I have seen the report."
+  }
+]
