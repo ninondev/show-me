@@ -10,6 +10,24 @@ Show me帮助Coding agent选择合适的回答形式
 
 ## 使用
 
+### 把一次修改变成可重复使用的操作
+
+[打开演示](https://ninondev.github.io/show-me/)，点击 **Try an example**。改一个文件名，就能预览整批结果；再改一个例子，可以排除不符合要求的规则。选好后保存操作，下次换一批数据继续用。
+
+想看规则怎样被纠正，可以选择 **Draft labels**。第一处修改既符合「删掉开头的 `[draft] `」，也符合「删掉所有 `[draft] `」。在 notes 那条记录上点击 **Keep unchanged**，后一个规则就会被排除。
+
+编辑器在浏览器本地运行，支持文字替换、前后缀修改、大小写转换、去掉首尾空格和提取词语。尝试例子、重复执行已保存的操作都不调用模型。结果可以下载，也可以把检查过的修改计划交给助手执行；执行前会核对原文件版本。
+
+用自己的数据生成离线工具，需要 Node 20 或更新版本：
+
+```sh
+node skills/show-me/scripts/operate.mjs render examples/files.json --out edit.html
+```
+
+用浏览器打开生成的 `edit.html`。这个文件包含输入数据，分享前请检查内容。[操作说明](skills/show-me/references/operations.md)列出了数据格式、支持范围和命令行用法。
+
+### 选择回答形式
+
 安装后，让助手对当前问题使用 `show-me`。
 
 | 你可以这样问 | 这份 skill 建议的回答形式 |
@@ -29,7 +47,7 @@ Show me帮助Coding agent选择合适的回答形式
 git clone https://github.com/ninondev/show-me.git
 ```
 
-把整个 `skills/show-me/` 文件夹复制到应用的 skill 目录，保留其中的 `references/`、`agents/` 和 `LICENSE`。
+把整个 `skills/show-me/` 文件夹复制到应用的 skill 目录，保留其中的 `references/`、`scripts/`、`assets/`、`agents/` 和 `LICENSE`。
 
 - Codex：`~/.agents/skills/`
 - Claude Code：`~/.claude/skills/`
