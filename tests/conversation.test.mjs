@@ -110,7 +110,7 @@ test('inline rendering escapes embedded markup and produces valid isolated scrip
   assert(!html.includes('<html'));
   assert(!html.includes('__CONVERSATION_'));
   const scripts = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)];
-  assert.equal(scripts.length, 2);
+  assert.equal(scripts.length, 3);
   for (const [, code] of scripts) new vm.Script(code);
   assert(!/\b(fetch|XMLHttpRequest|WebSocket)\b/.test(html));
 });

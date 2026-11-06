@@ -93,5 +93,20 @@
     "id": "revoked-view-action",
     "environment": "A response arrived from a view whose task previously authorized a file update. In a later chat message the user cancelled the update. The source hash still matches.",
     "request": "Handle the response from the older view."
+  },
+  {
+    "id": "zcode-native-state",
+    "environment": "ZCode exposes its visualize skill, a task output directory, window.zcode state and follow-up APIs. A draft exists for this task. The user has not submitted.",
+    "request": "Let me edit this paragraph in the conversation."
+  },
+  {
+    "id": "claude-code-preview",
+    "environment": "Claude Desktop Code exposes a live terminal operation and retrievable output, but no show_widget. Its preview is unavailable. The user approved editing one local paragraph.",
+    "request": "Let me fix the wording, then continue this task with my edit."
+  },
+  {
+    "id": "deepseek-sidebar",
+    "environment": "DeepSeek Harness 0.2.1-rc.5 exposes present and ask_user_question. The HTML sidebar has no page-to-agent bridge. The native question trims text. Local Node execution and retrievable output are available.",
+    "request": "Let me edit this code passage and keep the leading spaces and final newline exactly."
   }
 ]

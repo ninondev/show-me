@@ -21,11 +21,11 @@ Inside a supported chat host, an explicit action sends your changes to the
 current conversation. The agent checks the task and source version, does the
 agreed work, and reports what happened. Typing and exploring stay local.
 
-The bundled editable-answer example calls Codex's follow-up API. Its automated
-checks cover response validation and submission behavior. A real host round trip
-requires a user submission and the receiving agent's execution; a local demo or
-a mocked send does not exercise that path. Claude and ZCode integration follows
-their active host instructions, with an adapter verified in that session.
+The editor includes inline adapters for Codex and ZCode. Desktop agents can also
+receive edits through a temporary local preview: the user clicks **Use this**,
+and the waiting task gets the response. The [host reference](skills/show-me/references/hosts.md)
+covers Claude Desktop's Code tab and DeepSeek Harness,
+including the capabilities that still need a real-client check.
 
 ## Use it
 
@@ -59,7 +59,9 @@ including `references/`, `scripts/`, `assets/`, `agents/` and `LICENSE`.
 
 - Codex: `~/.agents/skills/`
 - Claude Code: `~/.claude/skills/`
-- ZCode and other apps: use the skill location documented by the app.
+- ZCode and DeepSeek Harness: follow the
+  [app-specific installation and capability notes](skills/show-me/references/hosts.md).
+  For ZIP import, use the release package with `SKILL.md` at its root.
 
 If `show-me` is already installed, compare or back it up before replacing it.
 Start a new session and ask the agent to load this copy. The optional scripts
@@ -68,9 +70,9 @@ need Node 20 or later; the presentation guidance does not require Node.
 ## How it fits your app
 
 The skill uses the active host's renderer, question controls and follow-up API.
-Read the [host reference](skills/show-me/references/hosts.md) for Codex, Claude,
-ZCode and terminals. In a client without interactive views, the conversation
-continues with text, tables or native questions.
+Read the [host reference](skills/show-me/references/hosts.md) for the route your
+app supports. In a client without interactive views or a waiting local command,
+the conversation continues with text, tables or native questions.
 
 Finished files open in the host's preview when supported, otherwise in the
 operating system's default application. Local HTML uses the default browser.
@@ -92,7 +94,7 @@ node scripts/build-demo.mjs
 ```
 
 Tests cover handoff validation, uncertain delivery, repeated submission, local
-receivers and the batch-operation engine. The [evaluation cases](evals/cases.json)
+receivers, draft persistence, host isolation and the batch-operation engine. The [evaluation cases](evals/cases.json)
 and [rubric](evals/rubric.md) cover the agent's behavior. Exercise host integration
 in a real conversation and distinguish sending a response from completing work.
 

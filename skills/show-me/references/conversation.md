@@ -23,11 +23,12 @@ for the surrounding conversation; split larger tasks into meaningful sections.
 For the bundled single-passage example, prepare the snapshot and run:
 
 ```sh
-node scripts/conversation.mjs render snapshot.json --out answer.html
+node scripts/conversation.mjs render snapshot.json --host codex --out answer.html
 ```
 
-This produces an inline fragment for the Codex renderer, not a standalone page.
-Present it through the active `visualize` instructions. The fragment includes
+Choose `--host zcode` for ZCode, and `--language zh-CN` for Chinese controls.
+This produces an inline fragment. Place and present it through the active
+`visualize` instructions. The fragment includes
 the helper and needs no remote libraries. Its draft stays in memory, with
 best-effort recovery through the host's private widget state. Draft text is not
 written to model-visible state. The user's explicit submit sends it to the
@@ -81,15 +82,36 @@ Discarding a draft is local. Once a request is sent, cancelling or undoing the
 work requires the current agent to check what has happened and what can safely
 be reversed. Do not show a local reset as an undo of an external write.
 
+## Desktop previews
+
+Where the active task can run a local command and retrieve its output, start:
+
+```sh
+node scripts/conversation.mjs serve snapshot.json --host claude-code
+```
+
+Open the printed URL through the app's preview tool. Add `--open` for the system's
+default browser. Use `--host deepseek` for DeepSeek Harness; read the
+[host reference](hosts.md) for each app's actual capabilities and verification
+status. These profiles use the same local receiver, not a native page bridge.
+
+Keep the command active while the user edits. When its tool yields an operation
+id, use that tool's documented wait or output retrieval mechanism. A receiver
+that expires before accepting a response makes no submission. If a command
+times out or is cancelled after the user clicks **Use this**, check its output
+and the live source before sending again. On `SHOW_ME_RESPONSE`, follow the receiving
+workflow above and report the actual result in the originating chat. The user
+does not transfer a response file between apps.
+
 ## Host adapters and evidence
 
-The included example calls `window.openai.sendFollowUpMessage({prompt, title})`
-only when the host is explicitly configured as Codex. Recheck the active host
-documentation before using it. Claude and ZCode use the APIs described by their
-current renderers; retain the same response data and replace the adapter.
+`hosts.cjs` contains the Codex and ZCode inline bridges. `preview-host.cjs` is
+loaded only by the standalone loopback page; inline fragments contain no network
+transport. Both leave task validation and execution with the receiving agent.
 
 The public web demo has an explicit local receiver. It validates the response
-and updates its synthetic sample in memory. It has no model connection and
-does not simulate an agent reply. Automated tests cover the handoff contract;
-a real host round trip is a separate check involving a user submission and the
-receiving agent's actual work.
+and updates its synthetic sample in memory, with no model connection. Automated
+tests cover the handoff contract and live local HTTP transport. A real host
+round trip also checks that the receiving agent continues and changes the
+agreed source. See [host checks](hosts.md#real-app-checks) before claiming that
+integration works in a particular client.

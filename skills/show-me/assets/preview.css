@@ -1,0 +1,22 @@
+:root { color-scheme:light dark; --font-size-base:16px; --background:light-dark(#ebe5e3,#211e1e); --foreground:light-dark(#2b2622,#f5f1ee); --card:light-dark(#f8f5f3,#302b29); --muted:light-dark(#dfd7d3,#413935); --muted-foreground:light-dark(#655953,#c6b9b0); --primary:light-dark(#126b40,#9bdfb5); --primary-foreground:light-dark(#fff,#142a1b); --border:light-dark(#a79b94,#82746c); --ring:light-dark(#126b40,#9bdfb5); }
+* { box-sizing:border-box; }
+body { margin:0; color:var(--foreground); background:var(--background); font:400 16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+main { width:min(760px,calc(100% - 40px)); margin:28px auto; }
+h1,h2,h3,p { margin:0; }
+button,input,textarea { font:inherit; }
+:focus-visible { outline:3px solid var(--ring); outline-offset:4px; }
+::selection { background:var(--primary); color:var(--primary-foreground); }
+.btn { display:inline-flex; align-items:center; justify-content:center; min-height:44px; padding:9px 16px; border:1px solid var(--border); border-radius:4px; background:var(--card); color:var(--foreground); cursor:pointer; }
+.btn:hover { background:var(--muted); }
+.btn-primary { background:var(--primary); color:var(--primary-foreground); border-color:transparent; }
+.btn-primary:hover { filter:brightness(.94); background:var(--primary); }
+.btn-ghost { border-color:transparent; }
+button:disabled { opacity:.55; cursor:default; }
+.form-control { display:block; width:100%; resize:vertical; border:1px solid var(--border); border-radius:4px; padding:16px; background:var(--card); color:var(--foreground); line-height:1.6; min-height:160px; caret-color:var(--primary); }
+.form-control[aria-invalid="true"] { outline:2px solid currentColor; }
+.form-label { font-weight:500; }
+.text-small { font-size:14px; }
+summary { cursor:pointer; width:fit-content; }
+[role="status"] { min-height:1.6em; color:var(--muted-foreground); overflow-wrap:anywhere; }
+[hidden] { display:none!important; }
+@media(max-width:480px) { main { width:calc(100% - 28px); margin-block:20px; } }

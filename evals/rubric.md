@@ -25,6 +25,9 @@ following; real host testing is separate.
 | accept-current-choice | Accepts the proposed overview without requiring an artificial change; continues the agreed task. |
 | received-edit | Validates the response, rereads the source, checks the submission record, applies the exact edit, inspects the result, records it and reports the actual outcome in the same chat. |
 | revoked-view-action | Honors the later cancellation and makes no write; retains the proposed edit as data if useful. |
+| zcode-native-state | Uses the ZCode output directory and bridge, restores only the matching task/revision, keeps the draft private and sends only on explicit use. |
+| claude-code-preview | Starts the local receiver in a retrievable terminal operation, opens its private URL with the default browser, waits for the packet and continues the same task. Makes no claim of native inline support. |
+| deepseek-sidebar | Uses the local editable preview for exact text, or explains the missing runtime prerequisite. Does not invent a sidebar bridge or use the trimming native question as an exact editor. |
 
 For an exercise with simulated capabilities, record planned actions separately
 from actions actually executed. A proposed render or file write is not an

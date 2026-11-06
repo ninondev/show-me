@@ -52,8 +52,10 @@ Do not add a separate chat box inside the conversation.
 
 For a view that changes the task, read [conversation handoffs](references/conversation.md)
 and the matching [host capabilities](references/hosts.md). Confirm the active
-host's documented follow-up API before wiring it. The bundled editable-answer
-example uses the Codex API; other hosts need their own verified adapter.
+host's documented interaction route before wiring it. The bundled editor has
+Codex and ZCode inline adapters, plus a one-shot local preview for desktop
+agents with retrievable command output. Choose the route in the host reference
+and verify it in the current session.
 
 An explicit button names the action the user is taking. Send only the selected
 values or edits and enough context to identify the current task and version.
@@ -71,8 +73,10 @@ specific conflict for resolution.
 
 A snapshot saved by the host helps restore a draft; it is not a submission.
 When the host cannot send a follow-up, use its native question control or the
-chat. Explain that boundary beside the action. File exchange is appropriate for
-an explicit export or a terminal workflow.
+local preview receiver when the task can keep a command waiting. Keep that
+operation alive, retrieve its result, and continue the same task automatically.
+If those capabilities are unavailable, use the chat. File exchange is appropriate
+for an explicit export or a terminal workflow.
 
 ## Check the experience
 

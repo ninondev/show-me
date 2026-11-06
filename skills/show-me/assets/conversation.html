@@ -32,6 +32,7 @@
   <noscript>You can describe the change in the chat.</noscript>
 </section>
 <script>__CONVERSATION_CORE__</script>
+<script>__HOST_CORE__</script>
 <script>
 (() => {
   const boot = __CONVERSATION_BOOT__;
@@ -41,6 +42,7 @@
   const submit = $('[data-submit]'), reset = $('[data-reset]'), suggest = $('[data-suggestion]');
   const api = window.ShowMeConversation;
   let session = boot.session, original = session.fields[0].value, draftTouched = false;
+  const host = boot.host === 'demo' ? null : window.ShowMeHosts.connect(boot.host, session, window, boot.local);
   let connection, sentPacket = null, restoredState = 'ready', saveTimer;
   const ownSubmissions = new Set();
   let sampleValue = original;
@@ -61,7 +63,7 @@
   $('[data-original]').textContent = original;
   editor.value = original;
   suggest.hidden = !suggestion;
-  const hostAvailable = () => boot.host === 'demo' || typeof window.openai?.sendFollowUpMessage === 'function';
+  const hostAvailable = () => boot.host === 'demo' || host.available;
 
   function update() {
     const changed = editor.value !== original;
@@ -75,7 +77,7 @@
   }
 
   function save() {
-    if (boot.host !== 'codex' || typeof window.openai?.setWidgetState !== 'function') return;
+    if (!host) return;
     const snapshot = {
       modelContent: null,
       privateContent: {showMe: {task: session.task, revision: session.revision, draft: editor.value, state: restoredState !== 'ready' ? restoredState : connection.state, submission: sentPacket?.submission || null}}
@@ -84,7 +86,7 @@
       say('tooLarge');
       return;
     }
-    try { Promise.resolve(window.openai.setWidgetState(snapshot)).catch(() => {
+    try { Promise.resolve(host.saveState(snapshot)).catch(() => {
       say('saveFailed');
     }); } catch (_) { say('saveFailed'); }
   }
@@ -105,7 +107,7 @@
       sentPacket = packet;
       ownSubmissions.add(packet.submission);
       save();
-      if (boot.host === 'codex') return window.openai.sendFollowUpMessage(message);
+      if (host) return host.send(message, packet);
       api.validate(session, packet);
       const change = packet.changes[0];
       if (sampleValue !== change.before) throw new Error('The sample changed. Reopen it before applying this edit.');
@@ -116,7 +118,7 @@
   }
   connect();
   say(hostAvailable() ? (boot.host === 'demo' ? 'idleDemo' : 'idleChat') : 'unavailable');
-  if (boot.host === 'codex') restore(window.openai?.widgetState);
+  if (host) restore(host.readState());
   translate();
   update();
 
@@ -177,10 +179,6 @@
     }
     translate(); update();
   });
-  window.addEventListener('openai:set_globals', event => {
-    if (boot.host === 'codex' && event.detail?.globals?.widgetState) {
-      restore(event.detail.globals.widgetState); update();
-    }
-  });
+  if (host) host.subscribe(saved => { restore(saved); update(); });
 })();
 </script>

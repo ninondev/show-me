@@ -16,7 +16,7 @@ Show me帮助Coding agent选择合适的回答形式
 
 点“采用”后，修改会回到当前对话。助手接着完成已经说好的任务，并告诉你实际改了什么。你也可以继续用文字说明，前面讨论过的内容不用重新交代。
 
-[在线演示](https://ninondev.github.io/show-me/)提供修改文字、选择布局和调整计划三个例子。网页会更新本地的示例内容，不调用模型。随包提供的文字编辑示例使用 Codex 的回传接口；其他应用由助手按当前可用的接口接入。真实对话中的接收和执行，需要在对应应用里检查。
+[在线演示](https://ninondev.github.io/show-me/)提供修改文字、选择布局和调整计划三个例子。网页会更新本地的示例内容，不调用模型。文字编辑示例已接入 Codex 和 ZCode 的聊天内接口。另有临时的本机预览：点“采用”后，正在等待的任务直接收到修改，用户不用传文件。各应用的入口和验证情况见[应用适配说明](skills/show-me/references/hosts.md)。
 
 ### 选择回答形式
 
@@ -59,13 +59,13 @@ git clone https://github.com/ninondev/show-me.git
 
 - Codex：`~/.agents/skills/`
 - Claude Code：`~/.claude/skills/`
-- ZCode 和其他应用：使用应用文档指定的 skill 目录。
+- ZCode 和 DeepSeek Harness：按[应用适配说明](skills/show-me/references/hosts.md)选择安装方式。通过 ZIP 导入时，使用发布包，`SKILL.md` 位于压缩包根目录。
 
 如果已经装有同名的 `show-me`，先比较内容或备份，再替换。安装后开启新会话，让助手加载 `show-me`，确认它加载的是刚安装的版本。
 
 ## 在不同应用中使用
 
-[应用适配说明](skills/show-me/references/hosts.md)涵盖 Codex、Claude、ZCode 和终端。助手会按当前会话可用的工具来呈现内容。对话内的图形由应用的渲染工具显示；没有这类工具时，可以使用文字、表格和编号步骤。
+[应用适配说明](skills/show-me/references/hosts.md)涵盖 Codex、ZCode、Claude Desktop 的 Code 页和 DeepSeek Harness。助手会先检查当前会话的工具，再选择聊天内视图、应用预览或系统默认浏览器。能展示页面、能收到修改、能继续完成任务，分别核对；缺少接收能力时，使用原生提问或继续聊天。
 
 查看做好的内容时，优先使用应用支持的预览工具，否则使用系统默认应用。通过系统打开本地 HTML 文件时，使用默认浏览器。
 

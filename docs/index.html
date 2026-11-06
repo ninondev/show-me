@@ -238,6 +238,41 @@
   else root.ShowMeConversation = api;
 })(typeof globalThis === 'undefined' ? this : globalThis);
 </script>
+<script>/* Browser-side transports for views hosted by an agent or its local preview. */
+(function (root) {
+  'use strict';
+  function connect(name, session, env) {
+    const bridge = name === 'codex' ? env.openai : name === 'zcode' ? env.zcode : null;
+    if (!['codex', 'zcode'].includes(name)) throw new Error('This view has no supported inline host.');
+    let saves = Promise.resolve();
+    return {
+      get available() { return typeof bridge?.sendFollowUpMessage === 'function'; },
+      readState() { return bridge?.widgetState; },
+      saveState(snapshot) {
+        const frozen = JSON.parse(JSON.stringify(snapshot));
+        saves = saves.catch(() => {}).then(() => {
+          if (typeof bridge?.setWidgetState !== 'function') throw new Error('Draft storage is unavailable.');
+          return bridge.setWidgetState(frozen);
+        });
+        return saves;
+      },
+      subscribe(restore) {
+        env.addEventListener((name === 'zcode' ? 'zcode' : 'openai') + ':set_globals', event => {
+          if (Object.hasOwn(event.detail?.globals || {}, 'widgetState')) restore(event.detail.globals.widgetState);
+        });
+      },
+      async send(message) {
+        await saves;
+        // A host's undocumented return fields cannot authorize another submission.
+        await bridge.sendFollowUpMessage(message);
+      }
+    };
+  }
+  const api = {connect};
+  if (typeof module !== 'undefined' && module.exports) module.exports = api;
+  else root.ShowMeHosts = api;
+})(typeof globalThis === 'undefined' ? this : globalThis);
+</script>
 <script>
 (() => {
   const boot = {"session":{"schema":1,"task":"project-description","revision":"sample-1","action":"update-description","fields":[{"id":"description","kind":"text","value":"Trail notes is an application that allows people to record walking routes and add notes about places along the way.","allowEmpty":false}]},"host":"demo","label":"Project description","suggestion":"Trail notes helps you record walks and remember places along the way.","strings":{"label":"Project description","region":"Edit the current answer","local":"Local example","original":"Original wording","shorter":"Try a shorter version","reset":"Reset","submit":"Use this","checkChat":"Check the chat","applied":"Applied","result":"Updated sample","again":"Edit again","noScript":"You can describe the change in the chat.","idleDemo":"Edit the wording, then use it to update the sample below.","idleChat":"Edit here, or keep talking in the chat. Use this sends your wording to the agent.","unavailable":"Continue in the chat to use these edits. This preview has no connection to an agent.","tooLarge":"This draft is too large to restore later. Keep this view open until you send it.","saveFailed":"Draft recovery is unavailable. Your text is still here; keep this view open.","restoredSent":"This view already handed off a response. Check the chat for its outcome.","restoredUnknown":"An earlier send has no confirmed outcome. Check the chat before sending again.","restored":"Your draft is back. Keep editing or use it.","originalRestored":"Original wording restored.","draft":"Your draft is ready when you are.","suggestion":"A starting point. Change any words you like.","empty":"Enter text before continuing.","invalid":"This text could not be checked. Shorten it or reopen the current result.","sendingDemo":"Updating the sample.","sendingChat":"Handing your edits to the chat.","cancelled":"Nothing sent. Your draft is still here.","doneDemo":"Sample updated with your exact wording. This page runs locally without an agent.","doneChat":"Handed to the chat. The agent will report what it changed there.","failedDemo":"The sample could not be updated. Your wording is still here.","failedChat":"Delivery could not be confirmed. Your draft is here. Check the chat before sending again.","editingAgain":"Editing the updated sample."}};
@@ -247,6 +282,7 @@
   const submit = $('[data-submit]'), reset = $('[data-reset]'), suggest = $('[data-suggestion]');
   const api = window.ShowMeConversation;
   let session = boot.session, original = session.fields[0].value, draftTouched = false;
+  const host = boot.host === 'demo' ? null : window.ShowMeHosts.connect(boot.host, session, window, boot.local);
   let connection, sentPacket = null, restoredState = 'ready', saveTimer;
   const ownSubmissions = new Set();
   let sampleValue = original;
@@ -267,7 +303,7 @@
   $('[data-original]').textContent = original;
   editor.value = original;
   suggest.hidden = !suggestion;
-  const hostAvailable = () => boot.host === 'demo' || typeof window.openai?.sendFollowUpMessage === 'function';
+  const hostAvailable = () => boot.host === 'demo' || host.available;
 
   function update() {
     const changed = editor.value !== original;
@@ -281,7 +317,7 @@
   }
 
   function save() {
-    if (boot.host !== 'codex' || typeof window.openai?.setWidgetState !== 'function') return;
+    if (!host) return;
     const snapshot = {
       modelContent: null,
       privateContent: {showMe: {task: session.task, revision: session.revision, draft: editor.value, state: restoredState !== 'ready' ? restoredState : connection.state, submission: sentPacket?.submission || null}}
@@ -290,7 +326,7 @@
       say('tooLarge');
       return;
     }
-    try { Promise.resolve(window.openai.setWidgetState(snapshot)).catch(() => {
+    try { Promise.resolve(host.saveState(snapshot)).catch(() => {
       say('saveFailed');
     }); } catch (_) { say('saveFailed'); }
   }
@@ -311,7 +347,7 @@
       sentPacket = packet;
       ownSubmissions.add(packet.submission);
       save();
-      if (boot.host === 'codex') return window.openai.sendFollowUpMessage(message);
+      if (host) return host.send(message, packet);
       api.validate(session, packet);
       const change = packet.changes[0];
       if (sampleValue !== change.before) throw new Error('The sample changed. Reopen it before applying this edit.');
@@ -322,7 +358,7 @@
   }
   connect();
   say(hostAvailable() ? (boot.host === 'demo' ? 'idleDemo' : 'idleChat') : 'unavailable');
-  if (boot.host === 'codex') restore(window.openai?.widgetState);
+  if (host) restore(host.readState());
   translate();
   update();
 
@@ -383,11 +419,7 @@
     }
     translate(); update();
   });
-  window.addEventListener('openai:set_globals', event => {
-    if (boot.host === 'codex' && event.detail?.globals?.widgetState) {
-      restore(event.detail.globals.widgetState); update();
-    }
-  });
+  if (host) host.subscribe(saved => { restore(saved); update(); });
 })();
 </script>
 </div>
