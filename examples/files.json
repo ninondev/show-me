@@ -1,0 +1,8 @@
+[
+  {"id":"profile","text":"draft/user-profile.ts","team":"accounts"},
+  {"id":"billing","text":"draft/billing-history.ts","team":"payments"},
+  {"id":"settings","text":"draft/account-settings.ts","team":"accounts"},
+  {"id":"archive","text":"archive/old-user-profile.ts","team":"archive"},
+  {"id":"search","text":"draft/search-results.ts","team":"search"},
+  {"id":"draft","text":"draft","team":"notes"}
+]

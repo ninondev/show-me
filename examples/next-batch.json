@@ -1,0 +1,5 @@
+[
+  {"id":"install","text":"[draft] Install instructions","category":"guide"},
+  {"id":"upgrade","text":"[draft] Upgrade checklist","category":"guide"},
+  {"id":"keep","text":"Check [draft] status before release","category":"notes"}
+]

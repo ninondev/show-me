@@ -1,4 +1,4 @@
 interface:
   display_name: "Show me"
-  short_description: "Choose text, visuals, or controls to fit the question"
-  default_prompt: "Use $show-me to explain the current topic in the clearest supported form."
+  short_description: "Show useful answers and turn repeated edits into local tools"
+  default_prompt: "Use $show-me to present this clearly, or make a reusable operation when the task calls for repeated edits."

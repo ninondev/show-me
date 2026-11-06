@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; connect-src 'none'; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
+<title>Show me · Teach an edit</title>
+<style>
+:root{color-scheme:light dark;--bg:light-dark(#fafaf8,#181a18);--fg:light-dark(#1c2520,#e6ebe6);--muted:light-dark(#536159,#a4b2a8);--line:light-dark(#cbd3cc,#424c44);--surface:light-dark(#fff,#202620);--accent:light-dark(#166742,#8ddbb0);--wash:light-dark(#e8f5ed,#243d2c);--bad:light-dark(#ad2531,#ffadb4);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:16px;background:var(--bg);color:var(--fg)}
+*{box-sizing:border-box}body{margin:0}main{max-width:1080px;margin:auto;padding:32px 28px 56px}header{display:flex;align-items:baseline;justify-content:space-between;gap:20px;padding-bottom:24px;border-bottom:1px solid var(--line)}a{color:inherit;text-underline-offset:4px}header a{font-size:14px;color:var(--muted)}h1{font-size:28px;line-height:1.2;font-weight:600;letter-spacing:-.025em;margin:0}h2{font-size:16px;margin:0;font-weight:600}p{margin:0;line-height:1.6}.intro{padding:24px 0;max-width:70ch}.intro p{color:var(--muted);margin-top:8px}.toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:20px}button,select,input,textarea{font:inherit;color:inherit}button,select,.file-label{min-height:40px;border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:8px 12px;cursor:pointer}button:hover,.file-label:hover{border-color:var(--accent)}button:disabled{opacity:.45;cursor:default}button:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible,.file-label:focus-within{outline:3px solid var(--accent);outline-offset:3px}button.primary{background:var(--fg);color:var(--bg);border-color:var(--fg)}.quiet{background:transparent}.file-label input{position:absolute;width:1px;height:1px;opacity:0}.field-label{display:flex;gap:6px;align-items:center;margin-left:auto;color:var(--muted);font-size:14px}.field-label input{width:120px;padding:8px;border:1px solid var(--line);border-radius:4px;background:var(--surface)}.rule-area{border-block:1px solid var(--line);padding:18px 0;margin-bottom:20px}.rule-header{display:flex;justify-content:space-between;gap:16px;align-items:center;margin-bottom:10px}.rule-header span{font-size:14px;color:var(--muted)}#rules{width:100%;max-width:100%}#rule-help{font-size:14px;color:var(--muted);margin-top:8px}.table-head,.record{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:20px}.table-head{color:var(--muted);font-size:13px;padding-bottom:10px}.record{padding:16px 0;border-top:1px solid var(--line);align-items:start}.before{white-space:pre-wrap;overflow-wrap:anywhere;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:14px;line-height:1.6}.record-id{font:12px system-ui;color:var(--muted);display:block;margin-top:4px}.result{min-width:0}.result textarea{width:100%;min-height:48px;resize:vertical;display:block;line-height:1.5;border:1px solid var(--line);border-radius:4px;padding:10px;background:var(--surface)}.result textarea.changed{background:var(--wash);color:var(--accent)}.row-actions{display:flex;gap:14px;align-items:center;margin-top:6px;flex-wrap:wrap}.row-actions button{font-size:12px;min-height:28px;padding:3px 0;border:none;background:none;text-decoration:underline;text-underline-offset:3px}.example-tag{font-size:12px;color:var(--accent)}.bottom{border-top:1px solid var(--line);padding-top:20px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:10px}#summary{margin-right:auto;font-size:14px}#status{min-height:48px;margin-top:16px;color:var(--muted);font-size:14px}#status.error{color:var(--bad)}details{margin-top:28px;color:var(--muted);font-size:14px}summary{cursor:pointer}details p{margin-top:8px;max-width:72ch}code{font-family:ui-monospace,monospace}footer{margin-top:32px;color:var(--muted);font-size:12px}::selection{background:var(--accent);color:var(--bg)}@media(max-width:600px){main{padding:20px 16px 40px}header{align-items:center}h1{font-size:24px}.table-head{display:none}.record{grid-template-columns:1fr;gap:10px}.field-label{margin-left:0;width:100%}.toolbar button,.toolbar select,.file-label{min-height:44px}.bottom button{min-height:44px}#summary{width:100%}.rule-header{align-items:start;flex-direction:column;gap:4px}.before{font-size:13px}.row-actions button{min-height:44px}}
+#rule-description{display:none;overflow-wrap:anywhere;margin-top:8px;font-size:14px;color:var(--muted)}@media(max-width:600px){#rule-description{display:block}}
+</style>
+</head>
+<body>
+<main>
+<header><h1>Show me</h1><a href="https://github.com/ninondev/show-me">Source on GitHub</a></header>
+<section class="intro"><h2>Teach an edit</h2><p>Change one result. Compare the rules that fit, then try another example. Save the operation to use it on your next batch.</p></section>
+<div class="toolbar">
+  <select id="demo" aria-label="Example dataset"><option value="files">File labels</option><option value="labels">Draft labels</option></select>
+  <button id="example" type="button">Try an example</button>
+  <label class="file-label">Open JSON<input type="file" id="data-file" accept=".json,application/json"></label>
+  <label class="file-label">Load operation<input type="file" id="recipe-file" accept=".json,application/json"></label>
+  <label class="field-label">Text field<input id="field" value="text" aria-label="Text field name"></label>
+</div>
+<section class="rule-area" aria-label="Operation preview">
+  <div class="rule-header"><h2 id="rule-title">Edit a result to find a rule</h2><span id="example-count">0 examples</span></div>
+  <select id="rules" aria-label="Choose the operation to preview" disabled><option>No operation yet</option></select>
+  <p id="rule-description"></p>
+  <p id="rule-help">Preview changes below before applying an operation.</p>
+</section>
+<div class="table-head" aria-hidden="true"><span>Current text</span><span>Result · edit to teach</span></div>
+<section id="records" aria-label="Before and after records"></section>
+<div class="bottom">
+  <span id="summary" role="status" aria-live="polite">No changes</span>
+  <button id="undo" disabled>Undo</button>
+  <button id="save-recipe" disabled>Save operation</button>
+  <button id="save-plan" disabled>Save plan for agent</button>
+  <button id="apply" class="primary" disabled>Apply to this copy</button>
+  <button id="download">Download JSON</button>
+</div>
+<p id="status" role="status" aria-live="polite">Your data stays in this browser. Downloads save a new file.</p>
+<details><summary>What can it learn?</summary><p>Literal replacements, prefixes and suffixes, case changes, outer-space trimming, and splitting words on spaces, slashes, underscores, dots or hyphens. It searches these operations locally. Use examples to distinguish rules that produce the same result on one record.</p><p>JSON records need a unique string <code>id</code> and a string in the chosen text field. Other fields are preserved. Limits: 1,000 records, 4,000 characters per text field and 2 MB per file. An exported operation contains its literal replacement text; review it before sharing.</p></details>
+<footer>Runs locally · No accounts, model calls or remote libraries</footer>
+</main>
+<script>__SHOWME_CORE__</script>
+<script type="application/json" id="boot">__SHOWME_BOOT__</script>
+<script>
+(() => {
+  'use strict';
+  const ops = window.ShowMeOperations;
+  const $ = id => document.getElementById(id);
+  const demos = {
+    files: [
+      {id:'profile',text:'draft/user-profile.ts',team:'accounts'},
+      {id:'billing',text:'draft/billing-history.ts',team:'payments'},
+      {id:'settings',text:'draft/account-settings.ts',team:'accounts'},
+      {id:'archive',text:'archive/old-user-profile.ts',team:'archive'},
+      {id:'search',text:'draft/search-results.ts',team:'search'},
+      {id:'draft',text:'draft',team:'notes'}],
+    labels: [
+      {id:'one',text:'[draft] Setup guide',category:'guide'},
+      {id:'two',text:'[draft] API reference',category:'reference'},
+      {id:'three',text:'Notes on [draft] status',category:'notes'},
+      {id:'four',text:'[draft] Quick start',category:'guide'},
+      {id:'five',text:'Release notes',category:'notes'}]
+  };
+  const boot = JSON.parse($('boot').textContent);
+  let source = boot.source, field = boot.field, rows, rules = [], selected = 0, imported = false, busy = false;
+  let examples = new Map(), history = [], lastRecipe = null;
+  $('field').value = field;
+  function message(text, error = false) { $('status').textContent = text; $('status').classList.toggle('error', error); }
+  function rule() { return rules[selected]; }
+  function compute() {
+    if (!imported) rules = ops.suggest(rows, [...examples].map(([id, after]) => ({id, after})), field);
+    selected = Math.min(selected, Math.max(0, rules.length - 1));
+  }
+  function teach(id, value, remove = false) {
+    const next = new Map(examples);
+    if (remove) next.delete(id); else next.set(id, value);
+    try {
+      const candidates = ops.suggest(rows, [...next].map(([id, after]) => ({id, after})), field);
+      if (candidates.length) ops.preview(rows, candidates[0]);
+      examples = next; rules = candidates; selected = 0; imported = false;
+      message('Example updated. Review the proposed changes.');
+    } catch (error) { rules = []; message(error.message, true); }
+    refresh();
+  }
+  function refresh() {
+    let changes = [];
+    try { changes = rule() ? ops.preview(rows, rule()) : []; }
+    catch (error) { rules = []; selected = 0; message(error.message, true); }
+    $('rules').replaceChildren();
+    for (const [index, recipe] of rules.entries()) {
+      const option = document.createElement('option'); option.value = index; option.textContent = ops.describe(recipe); $('rules').append(option);
+    }
+    if (!rules.length) { const option = document.createElement('option'); option.textContent = examples.size ? 'No supported rule fits every example' : 'No operation yet'; $('rules').append(option); }
+    $('rules').value = String(selected); $('rules').disabled = busy || !rules.length;
+    $('rule-description').textContent = rule() ? ops.describe(rule()) : '';
+    $('rule-title').textContent = imported ? 'Saved operation' : rules.length ? `${rules.length} ${rules.length === 1 ? 'rule fits' : 'rules fit'} your examples` : examples.size ? 'Try a different example' : 'Edit a result to find a rule';
+    $('example-count').textContent = `${examples.size} ${examples.size === 1 ? 'example' : 'examples'}`;
+    $('rule-help').textContent = rules.length > 1 ? 'Choose a rule to compare its results. Keep a record unchanged to rule out an unwanted edit.' : 'Inspect every change. Apply affects this browser copy; save a plan to pass the same changes to your agent.';
+    const after = new Map(changes.map(change => [change.id, change.after]));
+    for (const [index, row] of rows.entries()) {
+      const input = document.getElementById('edit-' + index);
+      const value = examples.has(row.id) ? examples.get(row.id) : (after.get(row.id) ?? row[field]);
+      if (document.activeElement !== input) input.value = value;
+      input.classList.toggle('changed', value !== row[field]);
+      input.disabled = busy;
+      const tag = input.parentElement.querySelector('.example-tag');
+      tag.textContent = examples.has(row.id) ? (value === row[field] ? 'Keep unchanged' : 'Your example') : '';
+      input.parentElement.querySelector('[data-clear]').hidden = !examples.has(row.id);
+    }
+    $('summary').textContent = changes.length ? `${changes.length} of ${rows.length} records will change` : `${rows.length} records · no changes`;
+    for (const id of ['apply', 'save-plan']) $(id).disabled = busy || !changes.length;
+    $('save-recipe').disabled = busy || (!rule() && !lastRecipe); $('undo').disabled = busy || !history.length;
+    for (const id of ['demo', 'example', 'data-file', 'recipe-file', 'field', 'download']) $(id).disabled = busy;
+    for (const button of $('records').querySelectorAll('button')) button.disabled = busy;
+  }
+  function renderRows() {
+    $('records').replaceChildren();
+    rows.forEach((row, index) => {
+      const record = document.createElement('div'); record.className = 'record';
+      const before = document.createElement('div'); before.className = 'before'; before.textContent = row[field];
+      const id = document.createElement('span'); id.className = 'record-id'; id.textContent = row.id; before.append(id);
+      const result = document.createElement('div'); result.className = 'result';
+      const input = document.createElement('textarea'); input.id = 'edit-' + index; input.rows = 1; input.maxLength = 4000; input.value = row[field]; input.setAttribute('aria-label', 'Result for ' + row.id);
+      input.addEventListener('input', () => {
+        teach(row.id, input.value);
+      });
+      const actions = document.createElement('div'); actions.className = 'row-actions';
+      const tag = document.createElement('span'); tag.className = 'example-tag';
+      const keep = document.createElement('button'); keep.type = 'button'; keep.textContent = 'Keep unchanged'; keep.setAttribute('aria-label', 'Keep ' + row.id + ' unchanged');
+      keep.onclick = () => teach(row.id, row[field]);
+      const clear = document.createElement('button'); clear.type = 'button'; clear.textContent = 'Remove example'; clear.dataset.clear = ''; clear.hidden = true; clear.setAttribute('aria-label', 'Remove example for ' + row.id);
+      clear.onclick = () => teach(row.id, '', true);
+      actions.append(tag, keep, clear); result.append(input, actions); record.append(before, result); $('records').append(record);
+    });
+    refresh();
+  }
+  function load(text, nextField, resetHistory = true) {
+    const parsed = ops.readRows(text, nextField);
+    source = text; field = nextField; rows = parsed; examples.clear(); rules = []; selected = 0; imported = false;
+    if (resetHistory) { history = []; lastRecipe = null; } $('field').value = field; renderRows();
+  }
+  function download(name, value, type = 'application/json') {
+    const url = URL.createObjectURL(new Blob([value], {type}));
+    const anchor = document.createElement('a'); anchor.href = url; anchor.download = name; anchor.click(); setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+  async function guarded(action) {
+    if (busy) return;
+    busy = true;
+    try { refresh(); await action(); } catch (error) { message(error.message, true); }
+    finally { busy = false; refresh(); }
+  }
+  $('rules').onchange = () => { selected = Number($('rules').value); refresh(); };
+  $('demo').onchange = () => { load(JSON.stringify(demos[$('demo').value], null, 2) + '\n', 'text'); message('Example data loaded. Try an example or edit any result.'); };
+  $('example').onclick = () => {
+    load(JSON.stringify(demos[$('demo').value], null, 2) + '\n', 'text');
+    examples.set(rows[0].id, $('demo').value === 'files' ? 'User profile' : 'Setup guide');
+    compute(); refresh(); message($('demo').value === 'labels' ? 'The prefix and everywhere rules both fit. Keep the notes record unchanged to distinguish them.' : 'Compare the rules, then edit another result to narrow the choice.');
+  };
+  $('field').onchange = () => { try { load(source, $('field').value); } catch (error) { $('field').value = field; message(error.message, true); } };
+  $('data-file').onchange = async event => {
+    const file = event.target.files[0]; if (!file) return;
+    await guarded(async () => {
+      if (file.size > ops.LIMITS.bytes) throw new Error('Use a file smaller than 2 MB.');
+      const reusable = rule() || lastRecipe;
+      const text = await file.text();
+      const nextRows = ops.readRows(text, field);
+      if (reusable && reusable.field === field) ops.preview(nextRows, reusable);
+      load(text, field);
+      if (reusable && reusable.field === field) { imported = true; rules = [reusable]; refresh(); }
+      message('Loaded ' + file.name + (reusable ? '. Review the saved operation on this batch.' : '.'));
+    });
+    event.target.value = '';
+  };
+  $('recipe-file').onchange = async event => {
+    const file = event.target.files[0]; if (!file) return;
+    await guarded(async () => {
+      if (file.size > ops.LIMITS.recipeBytes) throw new Error('This operation file is too large.');
+      const recipe = ops.validateRecipe(JSON.parse(await file.text()));
+      ops.preview(ops.readRows(source, recipe.field), recipe);
+      field = recipe.field; $('field').value = field; examples.clear(); imported = true; rules = [recipe]; selected = 0; renderRows(); message('Saved operation loaded. Review its effect on this batch.');
+    });
+    event.target.value = '';
+  };
+  $('save-recipe').onclick = () => guarded(async () => { download('show-me-operation.json', JSON.stringify(rule() || lastRecipe, null, 2) + '\n'); message('Operation downloaded. Load it with a new batch to reuse it.'); });
+  $('save-plan').onclick = () => guarded(async () => { const plan = await ops.makePlan(source, rule()); download('show-me-plan.json', JSON.stringify(plan, null, 2) + '\n'); message('Plan downloaded. It applies only to this exact source version.'); });
+  $('apply').onclick = () => guarded(async () => {
+    const plan = await ops.makePlan(source, rule()); const result = await ops.execute(source, plan);
+    lastRecipe = rule(); history.push({source, field, recipe: lastRecipe}); if (history.length > 10) history.shift();
+    load(result, field, false); message(`Applied ${plan.changes.length} changes to this copy. Download JSON to save the result.`);
+  });
+  $('undo').onclick = () => { const prior = history.pop(); if (!prior) return; load(prior.source, prior.field, false); imported = true; rules = [prior.recipe]; refresh(); message('Previous batch restored.'); };
+  $('download').onclick = () => download('show-me-result.json', source);
+  load(source, field);
+})();
+</script>
+</body>
+</html>

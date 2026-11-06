@@ -1,0 +1,7 @@
+[
+  {"id":"one","text":"[draft] Setup guide","category":"guide"},
+  {"id":"two","text":"[draft] API reference","category":"reference"},
+  {"id":"three","text":"Notes on [draft] status","category":"notes"},
+  {"id":"four","text":"[draft] Quick start","category":"guide"},
+  {"id":"five","text":"Release notes","category":"notes"}
+]

@@ -2,13 +2,39 @@
 
 English | [简体中文](README.zh-CN.md)
 
-Show me helps coding agents present answers in a form you can use: a table to
-compare plans, a diagram to follow a process, or an interactive view to explore
-what changes.
+Show me helps coding agents present useful answers and turn repeated text edits
+into reusable local operations.
 
 The skill chooses a form for each question and uses your app's existing tools.
 It keeps explanations in the conversation where possible, shows visual options
 before asking you to choose, and opens or embeds finished work for inspection.
+
+## Try an edit
+
+[Open the live demo](https://ninondev.github.io/show-me/), then click **Try an example**.
+One filename edit produces a preview for the whole batch. Edit another result to
+distinguish rules that fit the first example, then save the operation for another
+batch.
+
+For a useful ambiguity, choose **Draft labels** and try its example. Removing
+`[draft] ` from the start and removing it everywhere both fit the first edit.
+Click **Keep unchanged** on the notes record: the unwanted rule disappears.
+
+The editor runs in your browser. It searches a small set of text operations
+locally, so trying examples and reusing a saved operation make no model calls.
+It supports literal replacements, prefix/suffix edits, case changes, trimming,
+and word extraction. You can download the result or pass a reviewed plan to your
+agent. Each plan is checked against the source version before it runs.
+
+To make a self-contained tool with your own data, use Node 20 or later:
+
+```sh
+node skills/show-me/scripts/operate.mjs render examples/files.json --out edit.html
+```
+
+Open `edit.html` in your browser. The file embeds its input data and works offline.
+See the [operation workflow](skills/show-me/references/operations.md) for input
+format, supported operations, file limits, and CLI usage.
 
 ## Use it
 
@@ -32,7 +58,7 @@ git clone https://github.com/ninondev/show-me.git
 ```
 
 Copy the entire `skills/show-me/` folder into a skill directory your app reads.
-Include `references/`, `agents/`, and `LICENSE`.
+Include `references/`, `scripts/`, `assets/`, `agents/`, and `LICENSE`.
 
 - Codex: `~/.agents/skills/`
 - Claude Code: `~/.claude/skills/`
@@ -58,6 +84,18 @@ instructions. When you ask for a file, report, website, or export, that request
 sets the deliverable.
 
 ## Contributing
+
+Run the deterministic operation checks and rebuild the demo:
+
+```sh
+node --test tests/*.test.mjs
+node scripts/build-demo.mjs
+```
+
+The tests cover learning from positive and negative examples, reuse on three
+new batches, unchanged data, stale plans, CLI execution and safe HTML embedding.
+Human effort, end-to-end model tokens and total task time still need comparison
+against ordinary agent editing, including tool preparation and review.
 
 The [evaluation cases](evals/cases.json) cover form selection, choices, exports,
 and missing host capabilities. Run them with a fresh agent, then assess its

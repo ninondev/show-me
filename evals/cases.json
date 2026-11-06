@@ -48,5 +48,20 @@
     "id": "open-result",
     "environment": "A macOS shell opener is available. The fictional file '/work/Workshop Summary.html' exists. The opener has returned exit code 0. There is no screen or browser state inspection.",
     "request": "Tell me whether I have seen the report."
+  },
+  {
+    "id": "reusable-operation",
+    "environment": "Node 20+ and the bundled operation CLI are available. Work only in a temporary folder. The data is synthetic.",
+    "request": "Use show-me to remove [draft] only from the start of text values. Records: a=[draft] Setup guide; b=Notes on [draft] status. I will repeat this on later batches. Show the changes and save a reusable operation."
+  },
+  {
+    "id": "one-off-edit",
+    "environment": "A local text file exists, and the agent can edit it.",
+    "request": "Change the single title from Setup to Installation. This is a one-time edit."
+  },
+  {
+    "id": "stale-operation-plan",
+    "environment": "A reviewed operation plan exists, but its source JSON has since changed in a metadata field.",
+    "request": "Apply that plan to the file now and save a new result."
   }
 ]

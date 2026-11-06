@@ -1,6 +1,6 @@
 ---
 name: show-me
-description: Choose a useful presentation for an explanation, comparison, decision, or visual preview. Use when the user asks to see, compare, or explore something, or when a visual would make the answer easier to understand.
+description: Show explanations, comparisons, and previews in a useful form. Turn repeated text edits into a reusable local operation when the user wants to edit examples, inspect a batch, or reuse a transformation.
 ---
 
 # Show me
@@ -25,6 +25,7 @@ this skill to present or preview it.
 | A layout or design choice | Visible previews at comparable proportions |
 | A decision only the user can make | The host's question control, if available |
 | Something already built | The actual artifact, opened or embedded as supported |
+| Repeating a text transformation across records | An example-driven operation with a batch preview |
 
 Pick the smallest form that answers the question. A list of numbers does not
 automatically need a chart. Use a table or steps when the relationships are
@@ -35,6 +36,22 @@ the user asked for the source.
 Put the key answer beside the visual. Do not repeat its labels and values in a
 second explanation. Controls should help explore the answer; the initial view
 must already be useful.
+
+## Leave a reusable operation when it earns its cost
+
+For repeated text edits, use the bundled [operation workflow](references/operations.md).
+The user edits examples, compares the rules that fit, and reviews their effect on
+the whole batch. Additional examples, including records that should stay unchanged,
+constrain the rule. Save the chosen operation for the next batch.
+
+Use this branch when previewing many changes or repeating the task makes a tool
+useful. Complete a small one-off edit directly. Include tool preparation and
+review in any cost comparison; local execution alone does not measure total savings.
+
+The bundled engine handles bounded text operations over JSON records. For work
+outside that range, use the appropriate existing tool or build a task-specific
+control with the host. Keep the user's real data and the action it will change
+connected; a demonstration is not permission to modify other files or publish.
 
 ## Use the current host
 
