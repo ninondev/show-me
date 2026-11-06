@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /** Infer a text operation, review a versioned plan, or create an offline editor. */
-import {readFile, writeFile, link, unlink, mkdir} from 'node:fs/promises';
+import {readFile, writeFile, link, unlink, mkdir, realpath} from 'node:fs/promises';
 import {resolve, dirname} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {randomUUID} from 'node:crypto';
@@ -83,7 +83,8 @@ async function main(args) {
   else process.stdout.write(result);
 }
 
-if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) main(process.argv.slice(2)).catch(error => {
+const isMain = process.argv[1] && await realpath(process.argv[1]).catch(() => null) === await realpath(fileURLToPath(import.meta.url));
+if (isMain) main(process.argv.slice(2)).catch(error => {
   console.error(error.code === 'EEXIST' ? 'The output already exists. Choose a new file.' : error.message);
   process.exitCode = 1;
 });

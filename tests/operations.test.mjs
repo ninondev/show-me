@@ -143,6 +143,16 @@ test('rendered tools safely embed literal script-like data and contain no remote
   assert.ok(!/<script[^>]+src=|<link[^>]+href=|\bfetch\(|XMLHttpRequest|WebSocket/.test(html));
 });
 
+test('CLI invoked through a symlink still creates the requested tool', async t => {
+  const dir = await mkdtemp(join(tmpdir(),'show-me-entry-'));
+  t.after(() => rm(dir,{recursive:true,force:true}));
+  const alias=join(dir,'operate.mjs'), input=join(dir,'input.json'), output=join(dir,'tool.html');
+  await symlink(cli,alias); await writeFile(input,source);
+  const result=spawnSync(process.execPath,[alias,'render',input,'--out',output],{encoding:'utf8'});
+  assert.equal(result.status,0,result.stderr);
+  assert.ok((await readFile(output,'utf8')).includes('Teach an edit'));
+});
+
 test('large generated plans remain readable by the CLI', async t => {
   const dir = await mkdtemp(join(tmpdir(),'show-me-large-'));
   t.after(() => rm(dir,{recursive:true,force:true}));
