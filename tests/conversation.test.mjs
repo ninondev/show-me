@@ -114,3 +114,18 @@ test('inline rendering escapes embedded markup and produces valid isolated scrip
   for (const [, code] of scripts) new vm.Script(code);
   assert(!/\b(fetch|XMLHttpRequest|WebSocket)\b/.test(html));
 });
+
+test('both demo languages cover the same text and formatting placeholders', async () => {
+  const locales = JSON.parse(await readFile(new URL('../skills/show-me/assets/demo-locales.json', import.meta.url), 'utf8'));
+  for (const group of ['page', 'editor', 'sample']) {
+    assert.deepEqual(Object.keys(locales.en[group]).sort(), Object.keys(locales['zh-CN'][group]).sort());
+    for (const [key, value] of Object.entries(locales.en[group])) {
+      const translated = locales['zh-CN'][group][key];
+      assert.equal(typeof translated, 'string');
+      assert(translated.length > 0, key);
+      assert.deepEqual(value.match(/\{\w+\}/g), translated.match(/\{\w+\}/g), key);
+    }
+  }
+  const template = await readFile(new URL('../skills/show-me/assets/demo.html', import.meta.url), 'utf8');
+  for (const [,key] of template.matchAll(/data-i18n(?:-aria)?="([^"]+)"/g)) assert(key in locales.en.page, key);
+});

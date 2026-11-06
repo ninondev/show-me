@@ -19,6 +19,7 @@
   header a { text-decoration:none; }
   .wordmark { font-size:25px; font-weight:500; letter-spacing:-.04em; }
   nav { display:flex; align-items:center; flex-wrap:wrap; gap:24px; font-size:15px; }
+  .language-select { min-height:44px; max-width:100%; padding:8px; color:var(--foreground); background:var(--card); border:1px solid var(--border); border-radius:4px; font:inherit; }
   h1,h2,h3,p { margin:0; }
   h1 { font-size:clamp(36px,4.5vw,60px); font-weight:500; line-height:1.06; letter-spacing:-.04em; max-width:14ch; text-wrap:balance; }
   h2 { font-size:27px; font-weight:500; line-height:1.2; letter-spacing:-.025em; }
@@ -80,22 +81,23 @@
     .below { padding-block:45px; gap:40px; }
     .time-plan { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); }
     .time-plan div { padding:10px 6px; } .time-plan output { font-size:21px; white-space:nowrap; }
+    .time-plan output:lang(zh-CN) { font-size:18px; }
     .sm-heading { padding-inline-end:0!important; }
   }
   @media(prefers-reduced-motion:no-preference) { button { transition:background-color 120ms ease,color 120ms ease; } }
 </style>
 </head>
 <body>
-<header><a class="wordmark" href="https://github.com/ninondev/show-me">Show me</a><nav aria-label="Project"><a href="https://github.com/ninondev/show-me#install">Install</a><a href="https://github.com/ninondev/show-me">Source</a><button class="btn btn-ghost" id="theme" type="button" aria-label="Switch color theme">Theme</button></nav></header>
+<header><a class="wordmark" href="https://github.com/ninondev/show-me">Show me</a><nav aria-label="Project" data-i18n-aria="project"><a href="https://github.com/ninondev/show-me#install" data-i18n="install">Install</a><a href="https://github.com/ninondev/show-me" data-i18n="source">Source</a><select class="language-select" id="language" aria-label="Language" data-i18n-aria="language"><option value="en" lang="en">English</option><option value="zh-CN" lang="zh-CN">简体中文</option></select><button class="btn btn-ghost" id="theme" type="button" aria-label="Switch color theme" data-i18n="theme" data-i18n-aria="themeLabel">Theme</button></nav></header>
 <main>
-  <div class="intro"><h1>Work with the answer</h1><p>A skill for coding agents. Edit, choose or adjust inside the conversation, then let the agent continue from what you changed.</p></div>
-  <section class="examples" aria-label="Interactive examples">
-    <div class="example-tabs" role="tablist" aria-label="Example task">
-      <button type="button" role="tab" id="edit-tab" aria-selected="true" aria-controls="edit-panel">Edit wording</button>
-      <button type="button" role="tab" id="choose-tab" aria-selected="false" aria-controls="choose-panel" tabindex="-1">Choose a view</button>
-      <button type="button" role="tab" id="adjust-tab" aria-selected="false" aria-controls="adjust-panel" tabindex="-1">Adjust a plan</button>
+  <div class="intro"><h1 data-i18n="heading">Work with the answer</h1><p data-i18n="intro">A skill for coding agents. Edit, choose or adjust inside the conversation, then let the agent continue from what you changed.</p></div>
+  <section class="examples" aria-label="Interactive examples" data-i18n-aria="examples">
+    <div class="example-tabs" role="tablist" aria-label="Example task" data-i18n-aria="task">
+      <button type="button" role="tab" id="edit-tab" aria-selected="true" aria-controls="edit-panel" data-i18n="editTab">Edit wording</button>
+      <button type="button" role="tab" id="choose-tab" aria-selected="false" aria-controls="choose-panel" tabindex="-1" data-i18n="chooseTab">Choose a view</button>
+      <button type="button" role="tab" id="adjust-tab" aria-selected="false" aria-controls="adjust-panel" tabindex="-1" data-i18n="adjustTab">Adjust a plan</button>
     </div>
-    <div id="edit-panel" role="tabpanel" aria-labelledby="edit-tab"><p class="request">“Help me tighten this description.”</p><style>
+    <div id="edit-panel" role="tabpanel" aria-labelledby="edit-tab"><p class="request" data-i18n="editRequest">“Help me tighten this description.”</p><style>
   #showme-project-description { display: grid; gap: calc(var(--font-size-base, 16px) * 1); }
   #showme-project-description .sm-heading { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: calc(var(--font-size-base, 16px) * .5); padding-inline-end: 90px; }
   #showme-project-description .sm-field { display: grid; gap: calc(var(--font-size-base, 16px) * .5); min-width: 0; }
@@ -238,7 +240,7 @@
 </script>
 <script>
 (() => {
-  const boot = {"session":{"schema":1,"task":"project-description","revision":"sample-1","action":"update-description","fields":[{"id":"description","kind":"text","value":"Trail notes is an application that allows people to record walking routes and add notes about places along the way.","allowEmpty":false}]},"host":"demo","label":"Project description","suggestion":"Trail notes helps you record walks and remember places along the way."};
+  const boot = {"session":{"schema":1,"task":"project-description","revision":"sample-1","action":"update-description","fields":[{"id":"description","kind":"text","value":"Trail notes is an application that allows people to record walking routes and add notes about places along the way.","allowEmpty":false}]},"host":"demo","label":"Project description","suggestion":"Trail notes helps you record walks and remember places along the way.","strings":{"label":"Project description","region":"Edit the current answer","local":"Local example","original":"Original wording","shorter":"Try a shorter version","reset":"Reset","submit":"Use this","checkChat":"Check the chat","applied":"Applied","result":"Updated sample","again":"Edit again","noScript":"You can describe the change in the chat.","idleDemo":"Edit the wording, then use it to update the sample below.","idleChat":"Edit here, or keep talking in the chat. Use this sends your wording to the agent.","unavailable":"Continue in the chat to use these edits. This preview has no connection to an agent.","tooLarge":"This draft is too large to restore later. Keep this view open until you send it.","saveFailed":"Draft recovery is unavailable. Your text is still here; keep this view open.","restoredSent":"This view already handed off a response. Check the chat for its outcome.","restoredUnknown":"An earlier send has no confirmed outcome. Check the chat before sending again.","restored":"Your draft is back. Keep editing or use it.","originalRestored":"Original wording restored.","draft":"Your draft is ready when you are.","suggestion":"A starting point. Change any words you like.","empty":"Enter text before continuing.","invalid":"This text could not be checked. Shorten it or reopen the current result.","sendingDemo":"Updating the sample.","sendingChat":"Handing your edits to the chat.","cancelled":"Nothing sent. Your draft is still here.","doneDemo":"Sample updated with your exact wording. This page runs locally without an agent.","doneChat":"Handed to the chat. The agent will report what it changed there.","failedDemo":"The sample could not be updated. Your wording is still here.","failedChat":"Delivery could not be confirmed. Your draft is here. Check the chat before sending again.","editingAgain":"Editing the updated sample."}};
   const root = document.getElementById('showme-project-description');
   const $ = selector => root.querySelector(selector);
   const editor = $('textarea'), status = $('[role="status"]');
@@ -248,11 +250,23 @@
   let connection, sentPacket = null, restoredState = 'ready', saveTimer;
   const ownSubmissions = new Set();
   let sampleValue = original;
-  $('[data-label]').textContent = boot.label;
-  $('[data-context]').textContent = boot.host === 'demo' ? 'Local example' : '';
+  let strings = boot.strings, label = boot.label, suggestion = boot.suggestion, statusKey;
+  function say(key) { statusKey = key; status.textContent = strings[key]; }
+  function translate() {
+    root.setAttribute('aria-label', strings.region);
+    $('[data-label]').textContent = label;
+    $('[data-context]').textContent = boot.host === 'demo' ? strings.local : '';
+    $('summary').textContent = strings.original;
+    suggest.textContent = strings.shorter;
+    reset.textContent = strings.reset;
+    $('[data-result] h3').textContent = strings.result;
+    $('[data-again]').textContent = strings.again;
+    $('noscript').textContent = strings.noScript;
+    if (statusKey) say(statusKey);
+  }
   $('[data-original]').textContent = original;
   editor.value = original;
-  suggest.hidden = !boot.suggestion;
+  suggest.hidden = !suggestion;
   const hostAvailable = () => boot.host === 'demo' || typeof window.openai?.sendFollowUpMessage === 'function';
 
   function update() {
@@ -262,8 +276,8 @@
     reset.disabled = locked || !changed;
     suggest.disabled = locked;
     editor.readOnly = locked;
-    submit.textContent = locked ? 'Check the chat' : 'Use this';
-    if (boot.host === 'demo' && locked) submit.textContent = 'Applied';
+    submit.textContent = locked ? strings.checkChat : strings.submit;
+    if (boot.host === 'demo' && locked) submit.textContent = strings.applied;
   }
 
   function save() {
@@ -273,12 +287,12 @@
       privateContent: {showMe: {task: session.task, revision: session.revision, draft: editor.value, state: restoredState !== 'ready' ? restoredState : connection.state, submission: sentPacket?.submission || null}}
     };
     if (new TextEncoder().encode(JSON.stringify(snapshot)).length >= 16000) {
-      status.textContent = 'This draft is too large to restore later. Keep this view open until you send it.';
+      say('tooLarge');
       return;
     }
     try { Promise.resolve(window.openai.setWidgetState(snapshot)).catch(() => {
-      status.textContent = 'Draft recovery is unavailable. Your text is still here; keep this view open.';
-    }); } catch (_) { status.textContent = 'Draft recovery is unavailable. Your text is still here; keep this view open.'; }
+      say('saveFailed');
+    }); } catch (_) { say('saveFailed'); }
   }
 
   function restore(saved) {
@@ -288,8 +302,8 @@
     if (!draftTouched) editor.value = value.draft;
     if (['sending', 'sent', 'unknown'].includes(value.state)) {
       restoredState = value.state;
-      status.textContent = value.state === 'sent' ? 'This view already handed off a response. Check the chat for its outcome.' : 'An earlier send has no confirmed outcome. Check the chat before sending again.';
-    } else if (!draftTouched) status.textContent = 'Your draft is back. Keep editing or use it.';
+      say(value.state === 'sent' ? 'restoredSent' : 'restoredUnknown');
+    } else if (!draftTouched) say('restored');
   }
 
   function connect() {
@@ -307,46 +321,43 @@
     });
   }
   connect();
-  status.textContent = hostAvailable()
-    ? (boot.host === 'demo' ? 'Edit the wording, then use it to update the sample below.' : 'Edit here, or keep talking in the chat. Use this sends your wording to the agent.')
-    : 'Continue in the chat to use these edits. This preview has no connection to an agent.';
+  say(hostAvailable() ? (boot.host === 'demo' ? 'idleDemo' : 'idleChat') : 'unavailable');
   if (boot.host === 'codex') restore(window.openai?.widgetState);
+  translate();
   update();
 
   editor.addEventListener('input', () => {
     draftTouched = true;
     clearTimeout(saveTimer);
-    status.textContent = editor.value === original ? 'Back to the original wording.' : 'Your draft is ready when you are.';
+    say(editor.value === original ? 'originalRestored' : 'draft');
     editor.removeAttribute('aria-invalid');
     update();
-    clearTimeout(saveTimer); saveTimer = setTimeout(save, 350);
+    saveTimer = setTimeout(save, 350);
   });
   editor.addEventListener('blur', () => { if (draftTouched) save(); });
   suggest.addEventListener('click', () => {
-    editor.value = boot.suggestion; draftTouched = true;
-    status.textContent = 'A starting point. Change any words you like.';
+    editor.value = suggestion; draftTouched = true;
+    say('suggestion');
     editor.removeAttribute('aria-invalid'); update(); save(); editor.focus();
   });
   reset.addEventListener('click', () => {
     editor.value = original; draftTouched = true;
     editor.removeAttribute('aria-invalid');
-    status.textContent = 'Original wording restored.'; update(); save(); editor.focus();
+    say('originalRestored'); update(); save(); editor.focus();
   });
   submit.addEventListener('click', async () => {
     if (submit.disabled) return;
     try { api.prepare(session, {[session.fields[0].id]: editor.value}); }
-    catch (error) { status.textContent = error.message; editor.setAttribute('aria-invalid', 'true'); editor.focus(); return; }
+    catch (_) { say(editor.value.trim() ? 'invalid' : 'empty'); editor.setAttribute('aria-invalid', 'true'); editor.focus(); return; }
     draftTouched = true;
-    status.textContent = boot.host === 'demo' ? 'Updating the sample.' : 'Handing your edits to the chat.';
+    say(boot.host === 'demo' ? 'sendingDemo' : 'sendingChat');
     const sending = connection.submit({[session.fields[0].id]: editor.value});
     update();
     try {
       const result = await sending;
-      status.textContent = result.status === 'cancelled' ? 'Nothing sent. Your draft is still here.'
-        : boot.host === 'demo' ? 'Sample updated with your exact wording. This page runs locally without an agent.'
-        : 'Handed to the chat. The agent will report what it changed there.';
+      say(result.status === 'cancelled' ? 'cancelled' : boot.host === 'demo' ? 'doneDemo' : 'doneChat');
     } catch (_) {
-      status.textContent = boot.host === 'demo' ? 'The sample could not be updated. Your wording is still here.' : 'Delivery could not be confirmed. Your draft is here. Check the chat before sending again.';
+      say(boot.host === 'demo' ? 'failedDemo' : 'failedChat');
     }
     update(); save();
   });
@@ -355,7 +366,22 @@
     original = sampleValue; restoredState = 'ready'; sentPacket = null;
     $('[data-original]').textContent = original; editor.value = original;
     $('[data-result]').hidden = true;
-    connect(); status.textContent = 'Editing the updated sample.'; update(); editor.focus();
+    connect(); say('editingAgain'); update(); editor.focus();
+  });
+  root.addEventListener('showme:locale', event => {
+    if (boot.host !== 'demo') return;
+    const next = event.detail;
+    if (!next?.strings || Object.keys(boot.strings).some(key => typeof next.strings[key] !== 'string')) return;
+    strings = next.strings; label = strings.label; suggestion = next.sample.suggestion;
+    // Only untouched sample content changes language. User wording and adopted results stay exact.
+    if (!draftTouched && connection.state === 'ready') {
+      original = sampleValue = next.sample.value;
+      session = {...session, revision: 'sample-' + next.language, fields: [{...session.fields[0], value: original}]};
+      editor.value = original; editor.lang = next.language;
+      $('[data-original]').textContent = original;
+      connect();
+    }
+    translate(); update();
   });
   window.addEventListener('openai:set_globals', event => {
     if (boot.host === 'codex' && event.detail?.globals?.widgetState) {
@@ -366,27 +392,30 @@
 </script>
 </div>
     <div id="choose-panel" role="tabpanel" aria-labelledby="choose-tab" hidden>
-      <p class="request">“Show me two ways to present my study plan.”</p>
+      <p class="request" data-i18n="chooseRequest">“Show me two ways to present my study plan.”</p>
       <div class="choices">
-        <button type="button" class="choice" data-choice="focus" aria-pressed="false"><span class="choice-title">One task at a time<span class="selected-word" hidden>Selected</span></span><span class="sample-focus"><span>Up next</span><strong>Work through an example</strong><span>20 minutes, then a short review</span></span></button>
-        <button type="button" class="choice" data-choice="overview" aria-pressed="true"><span class="choice-title">The whole session<span class="selected-word">Selected</span></span><span class="sample-list"><span>Read the idea<strong>15 min</strong></span><span>Try an example<strong>20 min</strong></span><span>Recall it unaided<strong>10 min</strong></span></span></button>
+        <button type="button" class="choice" data-choice="focus" aria-pressed="false"><span class="choice-title"><span data-i18n="focus">One task at a time</span><span class="selected-word" data-i18n="selected" hidden>Selected</span></span><span class="sample-focus"><span data-i18n="upNext">Up next</span><strong data-i18n="focusTask">Work through an example</strong><span data-i18n="focusTime">20 minutes, then a short review</span></span></button>
+        <button type="button" class="choice" data-choice="overview" aria-pressed="true"><span class="choice-title"><span data-i18n="overview">The whole session</span><span class="selected-word" data-i18n="selected">Selected</span></span><span class="sample-list"><span><span data-i18n="readTask">Read the idea</span><strong data-i18n="readTime">15 min</strong></span><span><span data-i18n="practiceTask">Try an example</span><strong data-i18n="practiceTime">20 min</strong></span><span><span data-i18n="recallTask">Recall it unaided</span><strong data-i18n="recallTime">10 min</strong></span></span></button>
       </div>
-      <div class="controls"><p role="status" id="choice-status">Choose the view you would use.</p><button type="button" class="btn btn-primary" id="use-choice">Use this view</button></div>
+      <div class="controls"><p role="status" id="choice-status">Choose the view you would use.</p><button type="button" class="btn btn-primary" id="use-choice" data-i18n="useChoice">Use this view</button></div>
     </div>
     <div id="adjust-panel" role="tabpanel" aria-labelledby="adjust-tab" hidden>
-      <p class="request">“Fit this study session into the time I have.”</p>
-      <div class="plan-header"><label for="minutes">Time available</label><output class="plan-value" for="minutes" id="minutes-value">45 min</output></div>
+      <p class="request" data-i18n="adjustRequest">“Fit this study session into the time I have.”</p>
+      <div class="plan-header"><label for="minutes" data-i18n="available">Time available</label><output class="plan-value" for="minutes" id="minutes-value">45 min</output></div>
       <input id="minutes" type="range" min="20" max="120" step="5" value="45">
-      <div class="time-plan" aria-label="Example time allocation"><div id="read-part"><span>Read</span><output id="read-value"></output></div><div id="practice-part"><span>Practice</span><output id="practice-value"></output></div><div id="review-part"><span>Recall</span><output id="review-value"></output></div></div>
-      <div class="controls"><p role="status" id="plan-status">Adjust the time to see the whole plan change.</p><button type="button" class="btn btn-primary" id="use-plan">Use this plan</button></div>
+      <div class="time-plan" aria-label="Example time allocation" data-i18n-aria="allocation"><div id="read-part"><span data-i18n="read">Read</span><output id="read-value"></output></div><div id="practice-part"><span data-i18n="practice">Practice</span><output id="practice-value"></output></div><div id="review-part"><span data-i18n="recall">Recall</span><output id="review-value"></output></div></div>
+      <div class="controls"><p role="status" id="plan-status">Adjust the time to see the whole plan change.</p><button type="button" class="btn btn-primary" id="use-plan" data-i18n="usePlan">Use this plan</button></div>
     </div>
   </section>
-  <p class="note">These examples update sample content on this page. They run locally without a model. Inside a supported chat host, the same handoff sends your action to the ongoing conversation.</p>
-  <div class="below"><section><h2>The chat stays open</h2><p>Some answers need a sentence. Others benefit from a view you can work with. Show me asks the agent to choose for the task, carry your edits forward, and let you keep talking.</p><a href="https://github.com/ninondev/show-me/blob/main/skills/show-me/SKILL.md">Read the skill</a></section><section><h2>Use it with your agent</h2><p>Copy the skill folder into your agent’s skill directory. The included editable-answer example uses Codex’s conversation API; other hosts use their documented renderer and follow-up tools.</p><a href="https://github.com/ninondev/show-me#install">Installation instructions</a></section></div>
+  <p class="note" data-i18n="note">These examples update sample content on this page. They run locally without a model. Inside a supported chat host, the same handoff sends your action to the ongoing conversation.</p>
+  <div class="below"><section><h2 data-i18n="chatHeading">The chat stays open</h2><p data-i18n="chatBody">Some answers need a sentence. Others benefit from a view you can work with. Show me asks the agent to choose for the task, carry your edits forward, and let you keep talking.</p><a href="https://github.com/ninondev/show-me/blob/main/skills/show-me/SKILL.md" data-i18n="readSkill">Read the skill</a></section><section><h2 data-i18n="agentHeading">Use it with your agent</h2><p data-i18n="agentBody">Copy the skill folder into your agent’s skill directory. The included editable-answer example uses Codex’s conversation API; other hosts use their documented renderer and follow-up tools.</p><a href="https://github.com/ninondev/show-me#install" data-i18n="instructions">Installation instructions</a></section></div>
 </main>
-<footer><span>MIT licensed</span><a href="operations.html">Batch text operation example</a><a href="https://github.com/ninondev/show-me/blob/main/README.zh-CN.md">简体中文</a></footer>
+<footer><span data-i18n="license">MIT licensed</span><a href="operations.html" data-i18n="batch">Batch text operation example</a><a href="https://github.com/ninondev/show-me/blob/main/README.zh-CN.md" data-i18n="readme">Chinese README</a></footer>
 <script>
 (() => {
+  const locales = {"en":{"page":{"title":"Show me: work with the answer","description":"Show me is a skill for coding agents: useful views inside the conversation, with your edits returned to the current task.","project":"Project","language":"Language","install":"Install","source":"Source","theme":"Theme","themeLabel":"Switch color theme","heading":"Work with the answer","intro":"A skill for coding agents. Edit, choose or adjust inside the conversation, then let the agent continue from what you changed.","examples":"Interactive examples","task":"Example task","editTab":"Edit wording","chooseTab":"Choose a view","adjustTab":"Adjust a plan","editRequest":"“Help me tighten this description.”","chooseRequest":"“Show me two ways to present my study plan.”","adjustRequest":"“Fit this study session into the time I have.”","focus":"One task at a time","overview":"The whole session","selected":"Selected","upNext":"Up next","focusTask":"Work through an example","focusTime":"20 minutes, then a short review","readTask":"Read the idea","practiceTask":"Try an example","recallTask":"Recall it unaided","readTime":"15 min","practiceTime":"20 min","recallTime":"10 min","choiceIdle":"Choose the view you would use.","choiceFocus":"Focus on the next task. The rest stays out of the way.","choiceOverview":"See how the whole session fits together.","choiceSaved":"Sample selection saved: {view}.","useChoice":"Use this view","available":"Time available","allocation":"Example time allocation","read":"Read","practice":"Practice","recall":"Recall","minutes":"{value} min","planIdle":"Adjust the time to see the whole plan change.","planSaved":"Sample plan saved for {value} minutes.","usePlan":"Use this plan","note":"These examples update sample content on this page. They run locally without a model. Inside a supported chat host, the same handoff sends your action to the ongoing conversation.","chatHeading":"The chat stays open","chatBody":"Some answers need a sentence. Others benefit from a view you can work with. Show me asks the agent to choose for the task, carry your edits forward, and let you keep talking.","readSkill":"Read the skill","agentHeading":"Use it with your agent","agentBody":"Copy the skill folder into your agent’s skill directory. The included editable-answer example uses Codex’s conversation API; other hosts use their documented renderer and follow-up tools.","instructions":"Installation instructions","license":"MIT licensed","batch":"Batch text operation example (English)","readme":"Chinese README"},"editor":{"label":"Project description","region":"Edit the current answer","local":"Local example","original":"Original wording","shorter":"Try a shorter version","reset":"Reset","submit":"Use this","checkChat":"Check the chat","applied":"Applied","result":"Updated sample","again":"Edit again","noScript":"You can describe the change in the chat.","idleDemo":"Edit the wording, then use it to update the sample below.","idleChat":"Edit here, or keep talking in the chat. Use this sends your wording to the agent.","unavailable":"Continue in the chat to use these edits. This preview has no connection to an agent.","tooLarge":"This draft is too large to restore later. Keep this view open until you send it.","saveFailed":"Draft recovery is unavailable. Your text is still here; keep this view open.","restoredSent":"This view already handed off a response. Check the chat for its outcome.","restoredUnknown":"An earlier send has no confirmed outcome. Check the chat before sending again.","restored":"Your draft is back. Keep editing or use it.","originalRestored":"Original wording restored.","draft":"Your draft is ready when you are.","suggestion":"A starting point. Change any words you like.","empty":"Enter text before continuing.","invalid":"This text could not be checked. Shorten it or reopen the current result.","sendingDemo":"Updating the sample.","sendingChat":"Handing your edits to the chat.","cancelled":"Nothing sent. Your draft is still here.","doneDemo":"Sample updated with your exact wording. This page runs locally without an agent.","doneChat":"Handed to the chat. The agent will report what it changed there.","failedDemo":"The sample could not be updated. Your wording is still here.","failedChat":"Delivery could not be confirmed. Your draft is here. Check the chat before sending again.","editingAgain":"Editing the updated sample."},"sample":{"value":"Trail notes is an application that allows people to record walking routes and add notes about places along the way.","suggestion":"Trail notes helps you record walks and remember places along the way."}},"zh-CN":{"page":{"title":"Show me：在对话里直接修改结果","description":"Show me 帮助编程助手在对话中展示可操作的内容，再根据你的修改继续完成任务。","project":"项目","language":"语言","install":"安装","source":"源码","theme":"主题","themeLabel":"切换明暗主题","heading":"在对话里直接改","intro":"给编程助手用的 skill。你在对话里改文字、选方案、调参数，助手接着完成任务。","examples":"交互示例","task":"选择示例","editTab":"改文字","chooseTab":"选布局","adjustTab":"调计划","editRequest":"“帮我把这段介绍写短一点。”","chooseRequest":"“给我看看学习计划的两种布局。”","adjustRequest":"“按我有的时间，调整这次学习安排。”","focus":"一次只看一项","overview":"看完整个安排","selected":"已选","upNext":"接下来","focusTask":"动手做一个例子","focusTime":"先做 20 分钟，再简单回顾","readTask":"理解概念","practiceTask":"动手练习","recallTask":"不看资料回想","readTime":"15 分钟","practiceTime":"20 分钟","recallTime":"10 分钟","choiceIdle":"选一个你用着顺手的布局。","choiceFocus":"先看眼前这一项，其他安排暂时收起。","choiceOverview":"一次看清整个学习安排。","choiceSaved":"示例已采用“{view}”。","useChoice":"采用这个布局","available":"我有的时间","allocation":"示例时间分配","read":"阅读","practice":"练习","recall":"回想","minutes":"{value} 分钟","planIdle":"调一下时间，看看每一项怎么变。","planSaved":"示例已采用 {value} 分钟的安排。","usePlan":"采用这个计划","note":"这里的操作只会更新网页里的示例内容，不调用模型。在支持回传的聊天应用里，点击采用会把修改交回当前对话。","chatHeading":"想说什么，接着聊","chatBody":"有些问题，一句话就能说清。有些内容，直接改起来更方便。Show me 让助手按当前任务选择合适的形式，接住你的修改，也接住你接着说的话。","readSkill":"查看 skill","agentHeading":"让你的助手用起来","agentBody":"把 skill 文件夹复制到助手的 skill 目录。随包提供的文字编辑示例使用 Codex 的对话接口；其他应用按各自文档中的显示和回传接口接入。","instructions":"查看安装方法","license":"采用 MIT 许可证","batch":"批量文字处理示例（英文）","readme":"中文说明"},"editor":{"label":"项目介绍","region":"直接修改当前这段文字","local":"本地示例","original":"查看原文","shorter":"试试短一点的说法","reset":"恢复原文","submit":"采用这段","checkChat":"查看对话","applied":"已采用","result":"修改后的示例","again":"再改一遍","noScript":"也可以直接在聊天里说明要怎么改。","idleDemo":"改好后点击采用，下面的示例就会更新。","idleChat":"可以直接改这里，也可以接着聊。点击采用后，修改会交给助手。","unavailable":"这个预览暂时没有连上助手，可以在聊天里告诉助手怎么改。","tooLarge":"这段草稿太长，暂时存不下。提交前请先保留这个编辑区。","saveFailed":"暂时无法保存草稿，文字还在这里，先别关闭编辑区。","restoredSent":"这份修改已经交回对话，处理结果会在聊天里回复。","restoredUnknown":"上一次提交还没确认结果，先看一下聊天里的回复。","restored":"你的草稿还在，可以接着改。","originalRestored":"已恢复原文。","draft":"先慢慢改，采用后再提交。","suggestion":"换了一种短一点的说法，你可以继续改。","empty":"先写点内容，再点击采用。","invalid":"这段文字未能通过检查，请缩短一点，或重新打开当前内容。","sendingDemo":"正在更新示例。","sendingChat":"正在把修改交回对话。","cancelled":"已取消提交，文字还在。","doneDemo":"示例已按你的原话更新。这个网页在本地运行，没有连接助手。","doneChat":"已交回对话，助手会回复实际处理结果。","failedDemo":"示例没有更新成功，文字还在。","failedChat":"暂时无法确认有没有送达，草稿还在。先看一下聊天里的回复，再决定是否重试。","editingAgain":"可以继续修改刚刚采用的内容。"},"sample":{"value":"步行笔记是一个应用，可以让你记录步行路线，并为沿途经过的地点添加笔记。","suggestion":"用步行笔记记录路线，记下沿途值得回看的地方。"}}};
+  let language = 'en';
+  const text = (key, values = {}) => locales[language].page[key].replace(/\{(\w+)\}/g, (_, name) => String(values[name]));
   const tabs = [...document.querySelectorAll('[role="tab"]')];
   const activate = tab => {
     for (const item of tabs) {
@@ -409,13 +438,15 @@
 
   const api = window.ShowMeConversation;
   let selected = 'overview', chosen = 'overview', chosenRevision = 'sample-1', choiceConfirmed = false;
+  let choiceStatus = 'choiceIdle';
+  function drawChoiceStatus() { document.getElementById('choice-status').textContent = text(choiceStatus, {view:text(chosen)}); }
   const choiceButtons = [...document.querySelectorAll('[data-choice]')];
   const useChoice = document.getElementById('use-choice');
   choiceButtons.forEach(button => button.addEventListener('click', () => {
     selected = button.dataset.choice;
     choiceButtons.forEach(item => { const active = item === button; item.setAttribute('aria-pressed', String(active)); item.querySelector('.selected-word').hidden = !active; });
     useChoice.disabled = choiceConfirmed && selected === chosen;
-    document.getElementById('choice-status').textContent = selected === 'focus' ? 'Focus on the next task. The rest stays out of the way.' : 'See how the whole session fits together.';
+    choiceStatus = selected === 'focus' ? 'choiceFocus' : 'choiceOverview'; drawChoiceStatus();
   }));
   useChoice.addEventListener('click', async () => {
     const session = {schema:1,task:'sample-layout',revision:chosenRevision,action:'choose-layout',fields:[{id:'layout',kind:'choice',value:chosen,options:['focus','overview']}]};
@@ -423,16 +454,17 @@
     const connection = api.connect(session, async (_, packet) => { api.validate(session, packet); chosen = packet.changes[0].after; chosenRevision = crypto.randomUUID(); });
     await connection.submit({layout:selected});
     choiceConfirmed = true;
-    document.getElementById('choice-status').textContent = 'Sample selection saved: ' + (chosen === 'focus' ? 'one task at a time.' : 'the whole session.');
+    choiceStatus = 'choiceSaved'; drawChoiceStatus();
   });
 
   const slider = document.getElementById('minutes'), usePlan = document.getElementById('use-plan');
   let committedMinutes = 45, planRevision = 'sample-1', planConfirmed = false;
   function drawPlan() {
     const total = Number(slider.value), read = Math.round(total / 3), recall = Math.round(total * 2 / 9), practice = total - read - recall;
-    document.getElementById('minutes-value').textContent = total + ' min';
+    document.getElementById('minutes-value').textContent = text('minutes',{value:total});
+    slider.setAttribute('aria-valuetext',text('minutes',{value:total}));
     for (const [name,value] of [['read',read],['practice',practice],['review',recall]]) {
-      document.getElementById(name + '-value').textContent = value + ' min';
+      document.getElementById(name + '-value').textContent = text('minutes',{value});
       document.getElementById(name + '-part').style.flexGrow = value;
     }
     usePlan.disabled = planConfirmed && total === committedMinutes;
@@ -444,8 +476,31 @@
     const connection = api.connect(session, async (_, packet) => { api.validate(session, packet); committedMinutes = packet.changes[0].after; planRevision = crypto.randomUUID(); });
     await connection.submit({minutes:Number(slider.value)});
     planConfirmed = true;
-    document.getElementById('plan-status').textContent = 'Sample plan saved for ' + committedMinutes + ' minutes.';
+    drawPlanStatus();
   });
+  function drawPlanStatus() { document.getElementById('plan-status').textContent = text(planConfirmed ? 'planSaved' : 'planIdle',{value:committedMinutes}); }
+  function setLanguage(next, remember = false) {
+    language = next;
+    document.documentElement.lang = next;
+    document.title = text('title');
+    document.querySelector('meta[name="description"]').content = text('description');
+    document.querySelectorAll('[data-i18n]').forEach(element => { element.textContent = text(element.dataset.i18n); });
+    document.querySelectorAll('[data-i18n-aria]').forEach(element => { element.setAttribute('aria-label',text(element.dataset.i18nAria)); });
+    document.getElementById('language').value = next;
+    document.getElementById('showme-project-description').dispatchEvent(new CustomEvent('showme:locale', {detail:{language:next,strings:locales[next].editor,sample:locales[next].sample}}));
+    drawChoiceStatus(); drawPlan(); drawPlanStatus();
+    if (remember) {
+      try { localStorage.setItem('show-me-language', next); } catch (_) {}
+      const url = new URL(location.href); url.searchParams.set('lang', next); history.replaceState(null, '', url);
+    }
+  }
+  let savedLanguage;
+  try { savedLanguage = localStorage.getItem('show-me-language'); } catch (_) {}
+  const requestedLanguage = new URL(location.href).searchParams.get('lang');
+  const browserLanguage = /^zh\b/i.test(navigator.language) ? 'zh-CN' : 'en';
+  const supported = value => value === 'en' || value === 'zh-CN';
+  setLanguage(supported(requestedLanguage) ? requestedLanguage : supported(savedLanguage) ? savedLanguage : browserLanguage);
+  document.getElementById('language').addEventListener('change', event => setLanguage(event.target.value, true));
 })();
 </script>
 </body>

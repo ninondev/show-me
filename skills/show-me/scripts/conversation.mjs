@@ -12,10 +12,11 @@ export async function renderEdit(session, {host = 'codex', label = 'Your wording
   if (!['codex', 'demo'].includes(host) || typeof label !== 'string' || typeof suggestion !== 'string' || suggestion.length > 4000) throw new Error('Invalid view options.');
   const core = await readFile(new URL('./conversation.cjs', import.meta.url), 'utf8');
   const template = await readFile(new URL('../assets/conversation.html', import.meta.url), 'utf8');
+  const strings = JSON.parse(await readFile(new URL('../assets/demo-locales.json', import.meta.url), 'utf8')).en.editor;
   const viewId = 'showme-' + session.task;
   return template.replaceAll('__VIEW_ID__', viewId)
     .replace('__CONVERSATION_CORE__', () => core.replace(/<\/script/gi, '<\\/script'))
-    .replace('__CONVERSATION_BOOT__', () => safeJSON({session, host, label, suggestion}));
+    .replace('__CONVERSATION_BOOT__', () => safeJSON({session, host, label, suggestion, strings}));
 }
 
 async function readJSON(path) {

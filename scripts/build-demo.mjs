@@ -7,4 +7,6 @@ await writeFile(new URL('docs/operations.html',root), await renderHTML(await rea
 const session = JSON.parse(await readFile(new URL('examples/conversation.json', root), 'utf8'));
 const fragment = await renderEdit(session, {host:'demo', label:'Project description', suggestion:'Trail notes helps you record walks and remember places along the way.'});
 const page = await readFile(new URL('skills/show-me/assets/demo.html', root), 'utf8');
-await writeFile(new URL('docs/index.html', root), page.replace('__EDIT_FRAGMENT__', () => fragment));
+const locales = await readFile(new URL('skills/show-me/assets/demo-locales.json', root), 'utf8');
+const safeLocales = JSON.stringify(JSON.parse(locales)).replace(/[<>&\u2028\u2029]/g, char => '\\u' + char.charCodeAt(0).toString(16).padStart(4, '0'));
+await writeFile(new URL('docs/index.html', root), page.replace('__EDIT_FRAGMENT__', () => fragment).replace('__DEMO_LOCALES__', () => safeLocales));

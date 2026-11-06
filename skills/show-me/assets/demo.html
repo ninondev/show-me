@@ -19,6 +19,7 @@
   header a { text-decoration:none; }
   .wordmark { font-size:25px; font-weight:500; letter-spacing:-.04em; }
   nav { display:flex; align-items:center; flex-wrap:wrap; gap:24px; font-size:15px; }
+  .language-select { min-height:44px; max-width:100%; padding:8px; color:var(--foreground); background:var(--card); border:1px solid var(--border); border-radius:4px; font:inherit; }
   h1,h2,h3,p { margin:0; }
   h1 { font-size:clamp(36px,4.5vw,60px); font-weight:500; line-height:1.06; letter-spacing:-.04em; max-width:14ch; text-wrap:balance; }
   h2 { font-size:27px; font-weight:500; line-height:1.2; letter-spacing:-.025em; }
@@ -80,44 +81,48 @@
     .below { padding-block:45px; gap:40px; }
     .time-plan { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); }
     .time-plan div { padding:10px 6px; } .time-plan output { font-size:21px; white-space:nowrap; }
+    .time-plan output:lang(zh-CN) { font-size:18px; }
     .sm-heading { padding-inline-end:0!important; }
   }
   @media(prefers-reduced-motion:no-preference) { button { transition:background-color 120ms ease,color 120ms ease; } }
 </style>
 </head>
 <body>
-<header><a class="wordmark" href="https://github.com/ninondev/show-me">Show me</a><nav aria-label="Project"><a href="https://github.com/ninondev/show-me#install">Install</a><a href="https://github.com/ninondev/show-me">Source</a><button class="btn btn-ghost" id="theme" type="button" aria-label="Switch color theme">Theme</button></nav></header>
+<header><a class="wordmark" href="https://github.com/ninondev/show-me">Show me</a><nav aria-label="Project" data-i18n-aria="project"><a href="https://github.com/ninondev/show-me#install" data-i18n="install">Install</a><a href="https://github.com/ninondev/show-me" data-i18n="source">Source</a><select class="language-select" id="language" aria-label="Language" data-i18n-aria="language"><option value="en" lang="en">English</option><option value="zh-CN" lang="zh-CN">简体中文</option></select><button class="btn btn-ghost" id="theme" type="button" aria-label="Switch color theme" data-i18n="theme" data-i18n-aria="themeLabel">Theme</button></nav></header>
 <main>
-  <div class="intro"><h1>Work with the answer</h1><p>A skill for coding agents. Edit, choose or adjust inside the conversation, then let the agent continue from what you changed.</p></div>
-  <section class="examples" aria-label="Interactive examples">
-    <div class="example-tabs" role="tablist" aria-label="Example task">
-      <button type="button" role="tab" id="edit-tab" aria-selected="true" aria-controls="edit-panel">Edit wording</button>
-      <button type="button" role="tab" id="choose-tab" aria-selected="false" aria-controls="choose-panel" tabindex="-1">Choose a view</button>
-      <button type="button" role="tab" id="adjust-tab" aria-selected="false" aria-controls="adjust-panel" tabindex="-1">Adjust a plan</button>
+  <div class="intro"><h1 data-i18n="heading">Work with the answer</h1><p data-i18n="intro">A skill for coding agents. Edit, choose or adjust inside the conversation, then let the agent continue from what you changed.</p></div>
+  <section class="examples" aria-label="Interactive examples" data-i18n-aria="examples">
+    <div class="example-tabs" role="tablist" aria-label="Example task" data-i18n-aria="task">
+      <button type="button" role="tab" id="edit-tab" aria-selected="true" aria-controls="edit-panel" data-i18n="editTab">Edit wording</button>
+      <button type="button" role="tab" id="choose-tab" aria-selected="false" aria-controls="choose-panel" tabindex="-1" data-i18n="chooseTab">Choose a view</button>
+      <button type="button" role="tab" id="adjust-tab" aria-selected="false" aria-controls="adjust-panel" tabindex="-1" data-i18n="adjustTab">Adjust a plan</button>
     </div>
-    <div id="edit-panel" role="tabpanel" aria-labelledby="edit-tab"><p class="request">“Help me tighten this description.”</p>__EDIT_FRAGMENT__</div>
+    <div id="edit-panel" role="tabpanel" aria-labelledby="edit-tab"><p class="request" data-i18n="editRequest">“Help me tighten this description.”</p>__EDIT_FRAGMENT__</div>
     <div id="choose-panel" role="tabpanel" aria-labelledby="choose-tab" hidden>
-      <p class="request">“Show me two ways to present my study plan.”</p>
+      <p class="request" data-i18n="chooseRequest">“Show me two ways to present my study plan.”</p>
       <div class="choices">
-        <button type="button" class="choice" data-choice="focus" aria-pressed="false"><span class="choice-title">One task at a time<span class="selected-word" hidden>Selected</span></span><span class="sample-focus"><span>Up next</span><strong>Work through an example</strong><span>20 minutes, then a short review</span></span></button>
-        <button type="button" class="choice" data-choice="overview" aria-pressed="true"><span class="choice-title">The whole session<span class="selected-word">Selected</span></span><span class="sample-list"><span>Read the idea<strong>15 min</strong></span><span>Try an example<strong>20 min</strong></span><span>Recall it unaided<strong>10 min</strong></span></span></button>
+        <button type="button" class="choice" data-choice="focus" aria-pressed="false"><span class="choice-title"><span data-i18n="focus">One task at a time</span><span class="selected-word" data-i18n="selected" hidden>Selected</span></span><span class="sample-focus"><span data-i18n="upNext">Up next</span><strong data-i18n="focusTask">Work through an example</strong><span data-i18n="focusTime">20 minutes, then a short review</span></span></button>
+        <button type="button" class="choice" data-choice="overview" aria-pressed="true"><span class="choice-title"><span data-i18n="overview">The whole session</span><span class="selected-word" data-i18n="selected">Selected</span></span><span class="sample-list"><span><span data-i18n="readTask">Read the idea</span><strong data-i18n="readTime">15 min</strong></span><span><span data-i18n="practiceTask">Try an example</span><strong data-i18n="practiceTime">20 min</strong></span><span><span data-i18n="recallTask">Recall it unaided</span><strong data-i18n="recallTime">10 min</strong></span></span></button>
       </div>
-      <div class="controls"><p role="status" id="choice-status">Choose the view you would use.</p><button type="button" class="btn btn-primary" id="use-choice">Use this view</button></div>
+      <div class="controls"><p role="status" id="choice-status">Choose the view you would use.</p><button type="button" class="btn btn-primary" id="use-choice" data-i18n="useChoice">Use this view</button></div>
     </div>
     <div id="adjust-panel" role="tabpanel" aria-labelledby="adjust-tab" hidden>
-      <p class="request">“Fit this study session into the time I have.”</p>
-      <div class="plan-header"><label for="minutes">Time available</label><output class="plan-value" for="minutes" id="minutes-value">45 min</output></div>
+      <p class="request" data-i18n="adjustRequest">“Fit this study session into the time I have.”</p>
+      <div class="plan-header"><label for="minutes" data-i18n="available">Time available</label><output class="plan-value" for="minutes" id="minutes-value">45 min</output></div>
       <input id="minutes" type="range" min="20" max="120" step="5" value="45">
-      <div class="time-plan" aria-label="Example time allocation"><div id="read-part"><span>Read</span><output id="read-value"></output></div><div id="practice-part"><span>Practice</span><output id="practice-value"></output></div><div id="review-part"><span>Recall</span><output id="review-value"></output></div></div>
-      <div class="controls"><p role="status" id="plan-status">Adjust the time to see the whole plan change.</p><button type="button" class="btn btn-primary" id="use-plan">Use this plan</button></div>
+      <div class="time-plan" aria-label="Example time allocation" data-i18n-aria="allocation"><div id="read-part"><span data-i18n="read">Read</span><output id="read-value"></output></div><div id="practice-part"><span data-i18n="practice">Practice</span><output id="practice-value"></output></div><div id="review-part"><span data-i18n="recall">Recall</span><output id="review-value"></output></div></div>
+      <div class="controls"><p role="status" id="plan-status">Adjust the time to see the whole plan change.</p><button type="button" class="btn btn-primary" id="use-plan" data-i18n="usePlan">Use this plan</button></div>
     </div>
   </section>
-  <p class="note">These examples update sample content on this page. They run locally without a model. Inside a supported chat host, the same handoff sends your action to the ongoing conversation.</p>
-  <div class="below"><section><h2>The chat stays open</h2><p>Some answers need a sentence. Others benefit from a view you can work with. Show me asks the agent to choose for the task, carry your edits forward, and let you keep talking.</p><a href="https://github.com/ninondev/show-me/blob/main/skills/show-me/SKILL.md">Read the skill</a></section><section><h2>Use it with your agent</h2><p>Copy the skill folder into your agent’s skill directory. The included editable-answer example uses Codex’s conversation API; other hosts use their documented renderer and follow-up tools.</p><a href="https://github.com/ninondev/show-me#install">Installation instructions</a></section></div>
+  <p class="note" data-i18n="note">These examples update sample content on this page. They run locally without a model. Inside a supported chat host, the same handoff sends your action to the ongoing conversation.</p>
+  <div class="below"><section><h2 data-i18n="chatHeading">The chat stays open</h2><p data-i18n="chatBody">Some answers need a sentence. Others benefit from a view you can work with. Show me asks the agent to choose for the task, carry your edits forward, and let you keep talking.</p><a href="https://github.com/ninondev/show-me/blob/main/skills/show-me/SKILL.md" data-i18n="readSkill">Read the skill</a></section><section><h2 data-i18n="agentHeading">Use it with your agent</h2><p data-i18n="agentBody">Copy the skill folder into your agent’s skill directory. The included editable-answer example uses Codex’s conversation API; other hosts use their documented renderer and follow-up tools.</p><a href="https://github.com/ninondev/show-me#install" data-i18n="instructions">Installation instructions</a></section></div>
 </main>
-<footer><span>MIT licensed</span><a href="operations.html">Batch text operation example</a><a href="https://github.com/ninondev/show-me/blob/main/README.zh-CN.md">简体中文</a></footer>
+<footer><span data-i18n="license">MIT licensed</span><a href="operations.html" data-i18n="batch">Batch text operation example</a><a href="https://github.com/ninondev/show-me/blob/main/README.zh-CN.md" data-i18n="readme">Chinese README</a></footer>
 <script>
 (() => {
+  const locales = __DEMO_LOCALES__;
+  let language = 'en';
+  const text = (key, values = {}) => locales[language].page[key].replace(/\{(\w+)\}/g, (_, name) => String(values[name]));
   const tabs = [...document.querySelectorAll('[role="tab"]')];
   const activate = tab => {
     for (const item of tabs) {
@@ -140,13 +145,15 @@
 
   const api = window.ShowMeConversation;
   let selected = 'overview', chosen = 'overview', chosenRevision = 'sample-1', choiceConfirmed = false;
+  let choiceStatus = 'choiceIdle';
+  function drawChoiceStatus() { document.getElementById('choice-status').textContent = text(choiceStatus, {view:text(chosen)}); }
   const choiceButtons = [...document.querySelectorAll('[data-choice]')];
   const useChoice = document.getElementById('use-choice');
   choiceButtons.forEach(button => button.addEventListener('click', () => {
     selected = button.dataset.choice;
     choiceButtons.forEach(item => { const active = item === button; item.setAttribute('aria-pressed', String(active)); item.querySelector('.selected-word').hidden = !active; });
     useChoice.disabled = choiceConfirmed && selected === chosen;
-    document.getElementById('choice-status').textContent = selected === 'focus' ? 'Focus on the next task. The rest stays out of the way.' : 'See how the whole session fits together.';
+    choiceStatus = selected === 'focus' ? 'choiceFocus' : 'choiceOverview'; drawChoiceStatus();
   }));
   useChoice.addEventListener('click', async () => {
     const session = {schema:1,task:'sample-layout',revision:chosenRevision,action:'choose-layout',fields:[{id:'layout',kind:'choice',value:chosen,options:['focus','overview']}]};
@@ -154,16 +161,17 @@
     const connection = api.connect(session, async (_, packet) => { api.validate(session, packet); chosen = packet.changes[0].after; chosenRevision = crypto.randomUUID(); });
     await connection.submit({layout:selected});
     choiceConfirmed = true;
-    document.getElementById('choice-status').textContent = 'Sample selection saved: ' + (chosen === 'focus' ? 'one task at a time.' : 'the whole session.');
+    choiceStatus = 'choiceSaved'; drawChoiceStatus();
   });
 
   const slider = document.getElementById('minutes'), usePlan = document.getElementById('use-plan');
   let committedMinutes = 45, planRevision = 'sample-1', planConfirmed = false;
   function drawPlan() {
     const total = Number(slider.value), read = Math.round(total / 3), recall = Math.round(total * 2 / 9), practice = total - read - recall;
-    document.getElementById('minutes-value').textContent = total + ' min';
+    document.getElementById('minutes-value').textContent = text('minutes',{value:total});
+    slider.setAttribute('aria-valuetext',text('minutes',{value:total}));
     for (const [name,value] of [['read',read],['practice',practice],['review',recall]]) {
-      document.getElementById(name + '-value').textContent = value + ' min';
+      document.getElementById(name + '-value').textContent = text('minutes',{value});
       document.getElementById(name + '-part').style.flexGrow = value;
     }
     usePlan.disabled = planConfirmed && total === committedMinutes;
@@ -175,8 +183,31 @@
     const connection = api.connect(session, async (_, packet) => { api.validate(session, packet); committedMinutes = packet.changes[0].after; planRevision = crypto.randomUUID(); });
     await connection.submit({minutes:Number(slider.value)});
     planConfirmed = true;
-    document.getElementById('plan-status').textContent = 'Sample plan saved for ' + committedMinutes + ' minutes.';
+    drawPlanStatus();
   });
+  function drawPlanStatus() { document.getElementById('plan-status').textContent = text(planConfirmed ? 'planSaved' : 'planIdle',{value:committedMinutes}); }
+  function setLanguage(next, remember = false) {
+    language = next;
+    document.documentElement.lang = next;
+    document.title = text('title');
+    document.querySelector('meta[name="description"]').content = text('description');
+    document.querySelectorAll('[data-i18n]').forEach(element => { element.textContent = text(element.dataset.i18n); });
+    document.querySelectorAll('[data-i18n-aria]').forEach(element => { element.setAttribute('aria-label',text(element.dataset.i18nAria)); });
+    document.getElementById('language').value = next;
+    document.getElementById('showme-project-description').dispatchEvent(new CustomEvent('showme:locale', {detail:{language:next,strings:locales[next].editor,sample:locales[next].sample}}));
+    drawChoiceStatus(); drawPlan(); drawPlanStatus();
+    if (remember) {
+      try { localStorage.setItem('show-me-language', next); } catch (_) {}
+      const url = new URL(location.href); url.searchParams.set('lang', next); history.replaceState(null, '', url);
+    }
+  }
+  let savedLanguage;
+  try { savedLanguage = localStorage.getItem('show-me-language'); } catch (_) {}
+  const requestedLanguage = new URL(location.href).searchParams.get('lang');
+  const browserLanguage = /^zh\b/i.test(navigator.language) ? 'zh-CN' : 'en';
+  const supported = value => value === 'en' || value === 'zh-CN';
+  setLanguage(supported(requestedLanguage) ? requestedLanguage : supported(savedLanguage) ? savedLanguage : browserLanguage);
+  document.getElementById('language').addEventListener('change', event => setLanguage(event.target.value, true));
 })();
 </script>
 </body>

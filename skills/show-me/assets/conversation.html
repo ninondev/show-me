@@ -44,11 +44,23 @@
   let connection, sentPacket = null, restoredState = 'ready', saveTimer;
   const ownSubmissions = new Set();
   let sampleValue = original;
-  $('[data-label]').textContent = boot.label;
-  $('[data-context]').textContent = boot.host === 'demo' ? 'Local example' : '';
+  let strings = boot.strings, label = boot.label, suggestion = boot.suggestion, statusKey;
+  function say(key) { statusKey = key; status.textContent = strings[key]; }
+  function translate() {
+    root.setAttribute('aria-label', strings.region);
+    $('[data-label]').textContent = label;
+    $('[data-context]').textContent = boot.host === 'demo' ? strings.local : '';
+    $('summary').textContent = strings.original;
+    suggest.textContent = strings.shorter;
+    reset.textContent = strings.reset;
+    $('[data-result] h3').textContent = strings.result;
+    $('[data-again]').textContent = strings.again;
+    $('noscript').textContent = strings.noScript;
+    if (statusKey) say(statusKey);
+  }
   $('[data-original]').textContent = original;
   editor.value = original;
-  suggest.hidden = !boot.suggestion;
+  suggest.hidden = !suggestion;
   const hostAvailable = () => boot.host === 'demo' || typeof window.openai?.sendFollowUpMessage === 'function';
 
   function update() {
@@ -58,8 +70,8 @@
     reset.disabled = locked || !changed;
     suggest.disabled = locked;
     editor.readOnly = locked;
-    submit.textContent = locked ? 'Check the chat' : 'Use this';
-    if (boot.host === 'demo' && locked) submit.textContent = 'Applied';
+    submit.textContent = locked ? strings.checkChat : strings.submit;
+    if (boot.host === 'demo' && locked) submit.textContent = strings.applied;
   }
 
   function save() {
@@ -69,12 +81,12 @@
       privateContent: {showMe: {task: session.task, revision: session.revision, draft: editor.value, state: restoredState !== 'ready' ? restoredState : connection.state, submission: sentPacket?.submission || null}}
     };
     if (new TextEncoder().encode(JSON.stringify(snapshot)).length >= 16000) {
-      status.textContent = 'This draft is too large to restore later. Keep this view open until you send it.';
+      say('tooLarge');
       return;
     }
     try { Promise.resolve(window.openai.setWidgetState(snapshot)).catch(() => {
-      status.textContent = 'Draft recovery is unavailable. Your text is still here; keep this view open.';
-    }); } catch (_) { status.textContent = 'Draft recovery is unavailable. Your text is still here; keep this view open.'; }
+      say('saveFailed');
+    }); } catch (_) { say('saveFailed'); }
   }
 
   function restore(saved) {
@@ -84,8 +96,8 @@
     if (!draftTouched) editor.value = value.draft;
     if (['sending', 'sent', 'unknown'].includes(value.state)) {
       restoredState = value.state;
-      status.textContent = value.state === 'sent' ? 'This view already handed off a response. Check the chat for its outcome.' : 'An earlier send has no confirmed outcome. Check the chat before sending again.';
-    } else if (!draftTouched) status.textContent = 'Your draft is back. Keep editing or use it.';
+      say(value.state === 'sent' ? 'restoredSent' : 'restoredUnknown');
+    } else if (!draftTouched) say('restored');
   }
 
   function connect() {
@@ -103,46 +115,43 @@
     });
   }
   connect();
-  status.textContent = hostAvailable()
-    ? (boot.host === 'demo' ? 'Edit the wording, then use it to update the sample below.' : 'Edit here, or keep talking in the chat. Use this sends your wording to the agent.')
-    : 'Continue in the chat to use these edits. This preview has no connection to an agent.';
+  say(hostAvailable() ? (boot.host === 'demo' ? 'idleDemo' : 'idleChat') : 'unavailable');
   if (boot.host === 'codex') restore(window.openai?.widgetState);
+  translate();
   update();
 
   editor.addEventListener('input', () => {
     draftTouched = true;
     clearTimeout(saveTimer);
-    status.textContent = editor.value === original ? 'Back to the original wording.' : 'Your draft is ready when you are.';
+    say(editor.value === original ? 'originalRestored' : 'draft');
     editor.removeAttribute('aria-invalid');
     update();
-    clearTimeout(saveTimer); saveTimer = setTimeout(save, 350);
+    saveTimer = setTimeout(save, 350);
   });
   editor.addEventListener('blur', () => { if (draftTouched) save(); });
   suggest.addEventListener('click', () => {
-    editor.value = boot.suggestion; draftTouched = true;
-    status.textContent = 'A starting point. Change any words you like.';
+    editor.value = suggestion; draftTouched = true;
+    say('suggestion');
     editor.removeAttribute('aria-invalid'); update(); save(); editor.focus();
   });
   reset.addEventListener('click', () => {
     editor.value = original; draftTouched = true;
     editor.removeAttribute('aria-invalid');
-    status.textContent = 'Original wording restored.'; update(); save(); editor.focus();
+    say('originalRestored'); update(); save(); editor.focus();
   });
   submit.addEventListener('click', async () => {
     if (submit.disabled) return;
     try { api.prepare(session, {[session.fields[0].id]: editor.value}); }
-    catch (error) { status.textContent = error.message; editor.setAttribute('aria-invalid', 'true'); editor.focus(); return; }
+    catch (_) { say(editor.value.trim() ? 'invalid' : 'empty'); editor.setAttribute('aria-invalid', 'true'); editor.focus(); return; }
     draftTouched = true;
-    status.textContent = boot.host === 'demo' ? 'Updating the sample.' : 'Handing your edits to the chat.';
+    say(boot.host === 'demo' ? 'sendingDemo' : 'sendingChat');
     const sending = connection.submit({[session.fields[0].id]: editor.value});
     update();
     try {
       const result = await sending;
-      status.textContent = result.status === 'cancelled' ? 'Nothing sent. Your draft is still here.'
-        : boot.host === 'demo' ? 'Sample updated with your exact wording. This page runs locally without an agent.'
-        : 'Handed to the chat. The agent will report what it changed there.';
+      say(result.status === 'cancelled' ? 'cancelled' : boot.host === 'demo' ? 'doneDemo' : 'doneChat');
     } catch (_) {
-      status.textContent = boot.host === 'demo' ? 'The sample could not be updated. Your wording is still here.' : 'Delivery could not be confirmed. Your draft is here. Check the chat before sending again.';
+      say(boot.host === 'demo' ? 'failedDemo' : 'failedChat');
     }
     update(); save();
   });
@@ -151,7 +160,22 @@
     original = sampleValue; restoredState = 'ready'; sentPacket = null;
     $('[data-original]').textContent = original; editor.value = original;
     $('[data-result]').hidden = true;
-    connect(); status.textContent = 'Editing the updated sample.'; update(); editor.focus();
+    connect(); say('editingAgain'); update(); editor.focus();
+  });
+  root.addEventListener('showme:locale', event => {
+    if (boot.host !== 'demo') return;
+    const next = event.detail;
+    if (!next?.strings || Object.keys(boot.strings).some(key => typeof next.strings[key] !== 'string')) return;
+    strings = next.strings; label = strings.label; suggestion = next.sample.suggestion;
+    // Only untouched sample content changes language. User wording and adopted results stay exact.
+    if (!draftTouched && connection.state === 'ready') {
+      original = sampleValue = next.sample.value;
+      session = {...session, revision: 'sample-' + next.language, fields: [{...session.fields[0], value: original}]};
+      editor.value = original; editor.lang = next.language;
+      $('[data-original]').textContent = original;
+      connect();
+    }
+    translate(); update();
   });
   window.addEventListener('openai:set_globals', event => {
     if (boot.host === 'codex' && event.detail?.globals?.widgetState) {
