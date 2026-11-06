@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Show me is a skill for coding agents: useful views inside the conversation, with your edits returned to the current task.">
+<title>Show me: work with the answer</title>
+<style>
+  :root { color-scheme: light dark; --font-size-base:16px; --background:light-dark(#ebe5e3,#211e1e); --foreground:light-dark(#2b2622,#f5f1ee); --card:light-dark(#f8f5f3,#302b29); --muted:light-dark(#dfd7d3,#413935); --muted-foreground:light-dark(#655953,#c6b9b0); --primary:light-dark(#126b40,#9bdfb5); --primary-foreground:light-dark(#ffffff,#142a1b); --border:light-dark(#a79b94,#82746c); --ring:light-dark(#126b40,#9bdfb5); }
+  * { box-sizing:border-box; }
+  body { margin:0; color:var(--foreground); background:var(--background); font:400 17px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+  a { color:inherit; text-underline-offset:.25em; }
+  button,input,textarea { font:inherit; }
+  button,a,input,textarea,summary { -webkit-tap-highlight-color:transparent; }
+  :focus-visible { outline:3px solid var(--ring); outline-offset:4px; }
+  ::selection { background:var(--primary); color:var(--primary-foreground); }
+  header,main,footer { width:min(1120px,calc(100% - 64px)); margin-inline:auto; }
+  header { display:flex; flex-wrap:wrap; gap:20px; align-items:center; justify-content:space-between; padding-block:28px; }
+  header a { text-decoration:none; }
+  .wordmark { font-size:25px; font-weight:500; letter-spacing:-.04em; }
+  nav { display:flex; align-items:center; flex-wrap:wrap; gap:24px; font-size:15px; }
+  h1,h2,h3,p { margin:0; }
+  h1 { font-size:clamp(36px,4.5vw,60px); font-weight:500; line-height:1.06; letter-spacing:-.04em; max-width:14ch; text-wrap:balance; }
+  h2 { font-size:27px; font-weight:500; line-height:1.2; letter-spacing:-.025em; }
+  h3 { font-size:18px; font-weight:500; }
+  .intro { display:grid; grid-template-columns:1fr 1fr; gap:50px; align-items:end; padding-block:46px 42px; }
+  .intro p { max-width:48ch; font-size:19px; }
+  .examples { padding:32px; background:var(--card); }
+  .example-tabs { display:flex; gap:24px; flex-wrap:wrap; margin-bottom:30px; }
+  .example-tabs button { border:0; background:transparent; color:var(--muted-foreground); padding:0 0 6px; border-bottom:2px solid transparent; }
+  .example-tabs [aria-selected="true"] { color:var(--foreground); border-bottom-color:var(--primary); }
+  .request { font-size:23px; margin-bottom:25px; letter-spacing:-.02em; }
+  .btn { display:inline-flex; align-items:center; justify-content:center; min-height:44px; padding:9px 16px; border:1px solid var(--border); border-radius:4px; background:var(--card); color:var(--foreground); cursor:pointer; }
+  .btn:hover { background:var(--muted); }
+  .btn-primary { background:var(--primary); color:var(--primary-foreground); border-color:transparent; }
+  .btn-primary:hover { filter:brightness(.94); background:var(--primary); }
+  .btn-ghost { border-color:transparent; }
+  button:disabled { opacity:.55; cursor:default; }
+  .form-control { display:block; width:100%; resize:vertical; border:1px solid var(--border); border-radius:4px; padding:16px; background:var(--card); color:var(--foreground); line-height:1.6; min-height:130px; caret-color:var(--primary); }
+  .form-control[aria-invalid="true"] { outline:2px solid currentColor; }
+  .form-label { font-weight:500; }
+  .text-small { font-size:14px; }
+  details { font-size:15px; }
+  summary { cursor:pointer; width:fit-content; }
+  [role="status"] { min-height:1.6em; color:var(--muted-foreground); overflow-wrap:anywhere; }
+  [hidden] { display:none!important; }
+  .note { margin-top:20px; max-width:76ch; font-size:14px; color:var(--muted-foreground); }
+  .choices { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:20px; }
+  .choice { display:grid; gap:16px; text-align:left; border:2px solid transparent; padding:20px; color:var(--foreground); background:var(--background); cursor:pointer; border-radius:4px; }
+  .choice[aria-pressed="true"] { border-color:var(--primary); }
+  .choice strong { font-weight:500; }
+  .choice-title { display:flex; justify-content:space-between; align-items:center; gap:12px; }
+  .selected-word { font-size:14px; color:var(--primary); }
+  .sample-focus { display:grid; gap:9px; padding-block:14px; }
+  .sample-focus strong { font-size:25px; line-height:1.2; }
+  .sample-list { display:grid; gap:10px; }
+  .sample-list span { display:flex; justify-content:space-between; gap:10px; }
+  .controls { display:flex; gap:12px; flex-wrap:wrap; align-items:center; margin-top:20px; }
+  .controls [role="status"] { flex:1 1 250px; }
+  .plan-header { display:flex; justify-content:space-between; gap:15px; align-items:baseline; }
+  .plan-value { font-size:27px; font-variant-numeric:tabular-nums; }
+  input[type="range"] { display:block; width:100%; accent-color:var(--primary); margin:16px 0 25px; min-height:32px; }
+  .time-plan { display:flex; gap:5px; min-height:100px; }
+  .time-plan div { flex-basis:0; min-width:0; padding:14px; background:var(--background); display:flex; flex-direction:column; justify-content:space-between; }
+  .time-plan span { font-size:14px; }
+  .time-plan output { font-size:23px; font-variant-numeric:tabular-nums; }
+  .below { display:grid; grid-template-columns:1fr 1fr; gap:60px; padding-block:70px; }
+  .below p { margin-top:18px; max-width:55ch; }
+  .below a { display:inline-block; margin-top:20px; }
+  footer { padding-bottom:30px; display:flex; flex-wrap:wrap; gap:20px; justify-content:space-between; font-size:14px; }
+  @media(max-width:680px) {
+    header,main,footer { width:calc(100% - 32px); }
+    header { padding-block:20px; } nav { gap:16px; }
+    .intro { grid-template-columns:1fr; gap:20px; padding-block:25px 30px; }
+    .intro p { font-size:17px; }
+    .examples { padding:20px 16px; }
+    .example-tabs { gap:17px; font-size:15px; }
+    .request { font-size:21px; }
+    .choices,.below { grid-template-columns:1fr; gap:24px; }
+    .below { padding-block:45px; gap:40px; }
+    .time-plan { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); }
+    .time-plan div { padding:10px 6px; } .time-plan output { font-size:21px; white-space:nowrap; }
+    .sm-heading { padding-inline-end:0!important; }
+  }
+  @media(prefers-reduced-motion:no-preference) { button { transition:background-color 120ms ease,color 120ms ease; } }
+</style>
+</head>
+<body>
+<header><a class="wordmark" href="https://github.com/ninondev/show-me">Show me</a><nav aria-label="Project"><a href="https://github.com/ninondev/show-me#install">Install</a><a href="https://github.com/ninondev/show-me">Source</a><button class="btn btn-ghost" id="theme" type="button" aria-label="Switch color theme">Theme</button></nav></header>
+<main>
+  <div class="intro"><h1>Work with the answer</h1><p>A skill for coding agents. Edit, choose or adjust inside the conversation, then let the agent continue from what you changed.</p></div>
+  <section class="examples" aria-label="Interactive examples">
+    <div class="example-tabs" role="tablist" aria-label="Example task">
+      <button type="button" role="tab" id="edit-tab" aria-selected="true" aria-controls="edit-panel">Edit wording</button>
+      <button type="button" role="tab" id="choose-tab" aria-selected="false" aria-controls="choose-panel" tabindex="-1">Choose a view</button>
+      <button type="button" role="tab" id="adjust-tab" aria-selected="false" aria-controls="adjust-panel" tabindex="-1">Adjust a plan</button>
+    </div>
+    <div id="edit-panel" role="tabpanel" aria-labelledby="edit-tab"><p class="request">“Help me tighten this description.”</p>__EDIT_FRAGMENT__</div>
+    <div id="choose-panel" role="tabpanel" aria-labelledby="choose-tab" hidden>
+      <p class="request">“Show me two ways to present my study plan.”</p>
+      <div class="choices">
+        <button type="button" class="choice" data-choice="focus" aria-pressed="false"><span class="choice-title">One task at a time<span class="selected-word" hidden>Selected</span></span><span class="sample-focus"><span>Up next</span><strong>Work through an example</strong><span>20 minutes, then a short review</span></span></button>
+        <button type="button" class="choice" data-choice="overview" aria-pressed="true"><span class="choice-title">The whole session<span class="selected-word">Selected</span></span><span class="sample-list"><span>Read the idea<strong>15 min</strong></span><span>Try an example<strong>20 min</strong></span><span>Recall it unaided<strong>10 min</strong></span></span></button>
+      </div>
+      <div class="controls"><p role="status" id="choice-status">Choose the view you would use.</p><button type="button" class="btn btn-primary" id="use-choice">Use this view</button></div>
+    </div>
+    <div id="adjust-panel" role="tabpanel" aria-labelledby="adjust-tab" hidden>
+      <p class="request">“Fit this study session into the time I have.”</p>
+      <div class="plan-header"><label for="minutes">Time available</label><output class="plan-value" for="minutes" id="minutes-value">45 min</output></div>
+      <input id="minutes" type="range" min="20" max="120" step="5" value="45">
+      <div class="time-plan" aria-label="Example time allocation"><div id="read-part"><span>Read</span><output id="read-value"></output></div><div id="practice-part"><span>Practice</span><output id="practice-value"></output></div><div id="review-part"><span>Recall</span><output id="review-value"></output></div></div>
+      <div class="controls"><p role="status" id="plan-status">Adjust the time to see the whole plan change.</p><button type="button" class="btn btn-primary" id="use-plan">Use this plan</button></div>
+    </div>
+  </section>
+  <p class="note">These examples update sample content on this page. They run locally without a model. Inside a supported chat host, the same handoff sends your action to the ongoing conversation.</p>
+  <div class="below"><section><h2>The chat stays open</h2><p>Some answers need a sentence. Others benefit from a view you can work with. Show me asks the agent to choose for the task, carry your edits forward, and let you keep talking.</p><a href="https://github.com/ninondev/show-me/blob/main/skills/show-me/SKILL.md">Read the skill</a></section><section><h2>Use it with your agent</h2><p>Copy the skill folder into your agent’s skill directory. The included editable-answer example uses Codex’s conversation API; other hosts use their documented renderer and follow-up tools.</p><a href="https://github.com/ninondev/show-me#install">Installation instructions</a></section></div>
+</main>
+<footer><span>MIT licensed</span><a href="operations.html">Batch text operation example</a><a href="https://github.com/ninondev/show-me/blob/main/README.zh-CN.md">简体中文</a></footer>
+<script>
+(() => {
+  const tabs = [...document.querySelectorAll('[role="tab"]')];
+  const activate = tab => {
+    for (const item of tabs) {
+      const selected = item === tab;
+      item.setAttribute('aria-selected', String(selected)); item.tabIndex = selected ? 0 : -1;
+      document.getElementById(item.getAttribute('aria-controls')).hidden = !selected;
+    }
+  };
+  tabs.forEach((tab,index) => {
+    tab.addEventListener('click', () => activate(tab));
+    tab.addEventListener('keydown', event => {
+      const next = event.key === 'ArrowRight' ? (index + 1) % tabs.length : event.key === 'ArrowLeft' ? (index + tabs.length - 1) % tabs.length : event.key === 'Home' ? 0 : event.key === 'End' ? tabs.length - 1 : null;
+      if (next !== null) { event.preventDefault(); activate(tabs[next]); tabs[next].focus(); }
+    });
+  });
+  document.getElementById('theme').addEventListener('click', () => {
+    const current = document.documentElement.style.colorScheme || (matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light');
+    document.documentElement.style.colorScheme = current === 'dark' ? 'light' : 'dark';
+  });
+
+  const api = window.ShowMeConversation;
+  let selected = 'overview', chosen = 'overview', chosenRevision = 'sample-1', choiceConfirmed = false;
+  const choiceButtons = [...document.querySelectorAll('[data-choice]')];
+  const useChoice = document.getElementById('use-choice');
+  choiceButtons.forEach(button => button.addEventListener('click', () => {
+    selected = button.dataset.choice;
+    choiceButtons.forEach(item => { const active = item === button; item.setAttribute('aria-pressed', String(active)); item.querySelector('.selected-word').hidden = !active; });
+    useChoice.disabled = choiceConfirmed && selected === chosen;
+    document.getElementById('choice-status').textContent = selected === 'focus' ? 'Focus on the next task. The rest stays out of the way.' : 'See how the whole session fits together.';
+  }));
+  useChoice.addEventListener('click', async () => {
+    const session = {schema:1,task:'sample-layout',revision:chosenRevision,action:'choose-layout',fields:[{id:'layout',kind:'choice',value:chosen,options:['focus','overview']}]};
+    useChoice.disabled = true;
+    const connection = api.connect(session, async (_, packet) => { api.validate(session, packet); chosen = packet.changes[0].after; chosenRevision = crypto.randomUUID(); });
+    await connection.submit({layout:selected});
+    choiceConfirmed = true;
+    document.getElementById('choice-status').textContent = 'Sample selection saved: ' + (chosen === 'focus' ? 'one task at a time.' : 'the whole session.');
+  });
+
+  const slider = document.getElementById('minutes'), usePlan = document.getElementById('use-plan');
+  let committedMinutes = 45, planRevision = 'sample-1', planConfirmed = false;
+  function drawPlan() {
+    const total = Number(slider.value), read = Math.round(total / 3), recall = Math.round(total * 2 / 9), practice = total - read - recall;
+    document.getElementById('minutes-value').textContent = total + ' min';
+    for (const [name,value] of [['read',read],['practice',practice],['review',recall]]) {
+      document.getElementById(name + '-value').textContent = value + ' min';
+      document.getElementById(name + '-part').style.flexGrow = value;
+    }
+    usePlan.disabled = planConfirmed && total === committedMinutes;
+  }
+  slider.addEventListener('input', drawPlan); drawPlan();
+  usePlan.addEventListener('click', async () => {
+    const session = {schema:1,task:'sample-time',revision:planRevision,action:'set-duration',fields:[{id:'minutes',kind:'number',value:committedMinutes,min:20,max:120}]};
+    usePlan.disabled = true;
+    const connection = api.connect(session, async (_, packet) => { api.validate(session, packet); committedMinutes = packet.changes[0].after; planRevision = crypto.randomUUID(); });
+    await connection.submit({minutes:Number(slider.value)});
+    planConfirmed = true;
+    document.getElementById('plan-status').textContent = 'Sample plan saved for ' + committedMinutes + ' minutes.';
+  });
+})();
+</script>
+</body>
+</html>

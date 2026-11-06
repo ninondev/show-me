@@ -1,0 +1,162 @@
+<style>
+  #__VIEW_ID__ { display: grid; gap: calc(var(--font-size-base, 16px) * 1); }
+  #__VIEW_ID__ .sm-heading { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: calc(var(--font-size-base, 16px) * .5); padding-inline-end: 90px; }
+  #__VIEW_ID__ .sm-field { display: grid; gap: calc(var(--font-size-base, 16px) * .5); min-width: 0; }
+  #__VIEW_ID__ .sm-actions { display: flex; flex-wrap: wrap; align-items: center; gap: calc(var(--font-size-base, 16px) * .5); }
+  #__VIEW_ID__ .sm-spacer { flex: 1; }
+  #__VIEW_ID__ .sm-original { white-space: pre-wrap; overflow-wrap: anywhere; margin-block-start: calc(var(--font-size-base, 16px) * .5); }
+  #__VIEW_ID__ .sm-result { display: grid; gap: calc(var(--font-size-base, 16px) * .5); }
+  #__VIEW_ID__ [data-result-text] { white-space:pre-wrap; overflow-wrap:anywhere; }
+  #__VIEW_ID__ [hidden] { display: none; }
+  @media(max-width:480px) {
+    #__VIEW_ID__ .sm-actions { display:grid; grid-template-columns:1fr auto; }
+    #__VIEW_ID__ [data-suggestion] { grid-column:1 / -1; justify-self:start; }
+    #__VIEW_ID__ .sm-spacer { display:none; }
+    #__VIEW_ID__ [data-reset] { justify-self:start; }
+  }
+</style>
+<section id="__VIEW_ID__" aria-label="Edit the current answer" data-ui>
+  <div class="sm-heading"><label class="form-label" for="__VIEW_ID__-text" data-label></label><span class="text-small" data-context></span></div>
+  <div class="sm-field">
+    <textarea class="form-control" id="__VIEW_ID__-text" rows="4" maxlength="4000" aria-describedby="__VIEW_ID__-status"></textarea>
+    <details><summary>Original wording</summary><p class="sm-original" data-original></p></details>
+  </div>
+  <div class="sm-actions">
+    <button class="btn" type="button" data-suggestion>Try a shorter version</button>
+    <span class="sm-spacer"></span>
+    <button class="btn btn-ghost" type="button" data-reset disabled>Reset</button>
+    <button class="btn btn-primary" type="button" data-submit disabled>Use this</button>
+  </div>
+  <p class="text-small" id="__VIEW_ID__-status" role="status" aria-live="polite"></p>
+  <div class="sm-result" data-result hidden><h3>Updated sample</h3><p data-result-text></p><button class="btn" type="button" data-again>Edit again</button></div>
+  <noscript>You can describe the change in the chat.</noscript>
+</section>
+<script>__CONVERSATION_CORE__</script>
+<script>
+(() => {
+  const boot = __CONVERSATION_BOOT__;
+  const root = document.getElementById('__VIEW_ID__');
+  const $ = selector => root.querySelector(selector);
+  const editor = $('textarea'), status = $('[role="status"]');
+  const submit = $('[data-submit]'), reset = $('[data-reset]'), suggest = $('[data-suggestion]');
+  const api = window.ShowMeConversation;
+  let session = boot.session, original = session.fields[0].value, draftTouched = false;
+  let connection, sentPacket = null, restoredState = 'ready', saveTimer;
+  const ownSubmissions = new Set();
+  let sampleValue = original;
+  $('[data-label]').textContent = boot.label;
+  $('[data-context]').textContent = boot.host === 'demo' ? 'Local example' : '';
+  $('[data-original]').textContent = original;
+  editor.value = original;
+  suggest.hidden = !boot.suggestion;
+  const hostAvailable = () => boot.host === 'demo' || typeof window.openai?.sendFollowUpMessage === 'function';
+
+  function update() {
+    const changed = editor.value !== original;
+    const locked = restoredState !== 'ready' || connection?.state !== 'ready';
+    submit.disabled = locked || !hostAvailable() || !changed;
+    reset.disabled = locked || !changed;
+    suggest.disabled = locked;
+    editor.readOnly = locked;
+    submit.textContent = locked ? 'Check the chat' : 'Use this';
+    if (boot.host === 'demo' && locked) submit.textContent = 'Applied';
+  }
+
+  function save() {
+    if (boot.host !== 'codex' || typeof window.openai?.setWidgetState !== 'function') return;
+    const snapshot = {
+      modelContent: null,
+      privateContent: {showMe: {task: session.task, revision: session.revision, draft: editor.value, state: restoredState !== 'ready' ? restoredState : connection.state, submission: sentPacket?.submission || null}}
+    };
+    if (new TextEncoder().encode(JSON.stringify(snapshot)).length >= 16000) {
+      status.textContent = 'This draft is too large to restore later. Keep this view open until you send it.';
+      return;
+    }
+    try { Promise.resolve(window.openai.setWidgetState(snapshot)).catch(() => {
+      status.textContent = 'Draft recovery is unavailable. Your text is still here; keep this view open.';
+    }); } catch (_) { status.textContent = 'Draft recovery is unavailable. Your text is still here; keep this view open.'; }
+  }
+
+  function restore(saved) {
+    const value = saved?.privateContent?.showMe;
+    if (!value || value.task !== session.task || value.revision !== session.revision || typeof value.draft !== 'string' || value.draft.length > 4000) return;
+    if (ownSubmissions.has(value.submission)) return;
+    if (!draftTouched) editor.value = value.draft;
+    if (['sending', 'sent', 'unknown'].includes(value.state)) {
+      restoredState = value.state;
+      status.textContent = value.state === 'sent' ? 'This view already handed off a response. Check the chat for its outcome.' : 'An earlier send has no confirmed outcome. Check the chat before sending again.';
+    } else if (!draftTouched) status.textContent = 'Your draft is back. Keep editing or use it.';
+  }
+
+  function connect() {
+    connection = api.connect(session, async (message, packet) => {
+      sentPacket = packet;
+      ownSubmissions.add(packet.submission);
+      save();
+      if (boot.host === 'codex') return window.openai.sendFollowUpMessage(message);
+      api.validate(session, packet);
+      const change = packet.changes[0];
+      if (sampleValue !== change.before) throw new Error('The sample changed. Reopen it before applying this edit.');
+      sampleValue = change.after;
+      $('[data-result-text]').textContent = sampleValue;
+      $('[data-result]').hidden = false;
+    });
+  }
+  connect();
+  status.textContent = hostAvailable()
+    ? (boot.host === 'demo' ? 'Edit the wording, then use it to update the sample below.' : 'Edit here, or keep talking in the chat. Use this sends your wording to the agent.')
+    : 'Continue in the chat to use these edits. This preview has no connection to an agent.';
+  if (boot.host === 'codex') restore(window.openai?.widgetState);
+  update();
+
+  editor.addEventListener('input', () => {
+    draftTouched = true;
+    clearTimeout(saveTimer);
+    status.textContent = editor.value === original ? 'Back to the original wording.' : 'Your draft is ready when you are.';
+    editor.removeAttribute('aria-invalid');
+    update();
+    clearTimeout(saveTimer); saveTimer = setTimeout(save, 350);
+  });
+  editor.addEventListener('blur', () => { if (draftTouched) save(); });
+  suggest.addEventListener('click', () => {
+    editor.value = boot.suggestion; draftTouched = true;
+    status.textContent = 'A starting point. Change any words you like.';
+    editor.removeAttribute('aria-invalid'); update(); save(); editor.focus();
+  });
+  reset.addEventListener('click', () => {
+    editor.value = original; draftTouched = true;
+    editor.removeAttribute('aria-invalid');
+    status.textContent = 'Original wording restored.'; update(); save(); editor.focus();
+  });
+  submit.addEventListener('click', async () => {
+    if (submit.disabled) return;
+    try { api.prepare(session, {[session.fields[0].id]: editor.value}); }
+    catch (error) { status.textContent = error.message; editor.setAttribute('aria-invalid', 'true'); editor.focus(); return; }
+    draftTouched = true;
+    status.textContent = boot.host === 'demo' ? 'Updating the sample.' : 'Handing your edits to the chat.';
+    const sending = connection.submit({[session.fields[0].id]: editor.value});
+    update();
+    try {
+      const result = await sending;
+      status.textContent = result.status === 'cancelled' ? 'Nothing sent. Your draft is still here.'
+        : boot.host === 'demo' ? 'Sample updated with your exact wording. This page runs locally without an agent.'
+        : 'Handed to the chat. The agent will report what it changed there.';
+    } catch (_) {
+      status.textContent = boot.host === 'demo' ? 'The sample could not be updated. Your wording is still here.' : 'Delivery could not be confirmed. Your draft is here. Check the chat before sending again.';
+    }
+    update(); save();
+  });
+  $('[data-again]').addEventListener('click', () => {
+    session = {...session, revision: crypto.randomUUID(), fields: [{...session.fields[0], value: sampleValue}]};
+    original = sampleValue; restoredState = 'ready'; sentPacket = null;
+    $('[data-original]').textContent = original; editor.value = original;
+    $('[data-result]').hidden = true;
+    connect(); status.textContent = 'Editing the updated sample.'; update(); editor.focus();
+  });
+  window.addEventListener('openai:set_globals', event => {
+    if (boot.host === 'codex' && event.detail?.globals?.widgetState) {
+      restore(event.detail.globals.widgetState); update();
+    }
+  });
+})();
+</script>

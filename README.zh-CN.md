@@ -10,21 +10,13 @@ Show me帮助Coding agent选择合适的回答形式
 
 ## 使用
 
-### 把一次修改变成可重复使用的操作
+### 在对话里接着做
 
-[打开演示](https://ninondev.github.io/show-me/)，点击 **Try an example**。改一个文件名，就能预览整批结果；再改一个例子，可以排除不符合要求的规则。选好后保存操作，下次换一批数据继续用。
+一段话已经接近你的意思，就直接改那几个词；两种布局拿不准，就看着预览选；想知道时间缩短后怎么安排，就调一下参数，看看结果。
 
-想看规则怎样被纠正，可以选择 **Draft labels**。第一处修改既符合「删掉开头的 `[draft] `」，也符合「删掉所有 `[draft] `」。在 notes 那条记录上点击 **Keep unchanged**，后一个规则就会被排除。
+点“采用”后，修改会回到当前对话。助手接着完成已经说好的任务，并告诉你实际改了什么。你也可以继续用文字说明，前面讨论过的内容不用重新交代。
 
-编辑器在浏览器本地运行，支持文字替换、前后缀修改、大小写转换、去掉首尾空格和提取词语。尝试例子、重复执行已保存的操作都不调用模型。结果可以下载，也可以把检查过的修改计划交给助手执行；执行前会核对原文件版本。
-
-用自己的数据生成离线工具，需要 Node 20 或更新版本：
-
-```sh
-node skills/show-me/scripts/operate.mjs render examples/files.json --out edit.html
-```
-
-用浏览器打开生成的 `edit.html`。这个文件包含输入数据，分享前请检查内容。[操作说明](skills/show-me/references/operations.md)列出了数据格式、支持范围和命令行用法。
+[在线演示](https://ninondev.github.io/show-me/)提供修改文字、选择布局和调整计划三个例子。网页会更新本地的示例内容，不调用模型。随包提供的文字编辑示例使用 Codex 的回传接口；其他应用由助手按当前可用的接口接入。真实对话中的接收和执行，需要在对应应用里检查。
 
 ### 选择回答形式
 
@@ -38,6 +30,22 @@ node skills/show-me/scripts/operate.mjs render examples/files.json --out edit.ht
 | 「让我调整参加人数，看看总费用怎么变。」 | 应用支持时，提供可以调整人数的交互视图 |
 | 「给我看两种不同的布局，再让我选。」 | 先展示结构不同、便于比较的预览，再询问选择 |
 | 「把这份说明存成 Markdown 文件，给团队使用。」 | 保存为 Markdown 文件 |
+
+### 把一次修改变成可重复使用的操作
+
+[打开演示](https://ninondev.github.io/show-me/operations.html)，点击 **Try an example**。改一个文件名，就能预览整批结果；再改一个例子，可以排除不符合要求的规则。选好后保存操作，下次换一批数据继续用。
+
+想看规则怎样被纠正，可以选择 **Draft labels**。第一处修改既符合「删掉开头的 `[draft] `」，也符合「删掉所有 `[draft] `」。在 notes 那条记录上点击 **Keep unchanged**，后一个规则就会被排除。
+
+编辑器在浏览器本地运行，支持文字替换、前后缀修改、大小写转换、去掉首尾空格和提取词语。尝试例子、重复执行已保存的操作都不调用模型。结果可以下载，也可以把检查过的修改计划交给助手执行；执行前会核对原文件版本。
+
+用自己的数据生成离线工具，需要 Node 20 或更新版本：
+
+```sh
+node skills/show-me/scripts/operate.mjs render examples/files.json --out edit.html
+```
+
+用浏览器打开生成的 `edit.html`。这个文件包含输入数据，分享前请检查内容。[操作说明](skills/show-me/references/operations.md)列出了数据格式、支持范围和命令行用法。
 
 ## 安装
 

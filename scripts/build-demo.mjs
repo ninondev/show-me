@@ -1,5 +1,10 @@
 import {readFile, writeFile, mkdir} from 'node:fs/promises';
 import {renderHTML} from '../skills/show-me/scripts/operate.mjs';
+import {renderEdit} from '../skills/show-me/scripts/conversation.mjs';
 const root = new URL('../', import.meta.url);
 await mkdir(new URL('docs/',root), {recursive:true});
-await writeFile(new URL('docs/index.html',root), await renderHTML(await readFile(new URL('examples/files.json',root),'utf8')));
+await writeFile(new URL('docs/operations.html',root), await renderHTML(await readFile(new URL('examples/files.json',root),'utf8')));
+const session = JSON.parse(await readFile(new URL('examples/conversation.json', root), 'utf8'));
+const fragment = await renderEdit(session, {host:'demo', label:'Project description', suggestion:'Trail notes helps you record walks and remember places along the way.'});
+const page = await readFile(new URL('skills/show-me/assets/demo.html', root), 'utf8');
+await writeFile(new URL('docs/index.html', root), page.replace('__EDIT_FRAGMENT__', () => fragment));

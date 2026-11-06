@@ -1,0 +1,436 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; connect-src 'none'; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
+<title>Show me · Teach an edit</title>
+<style>
+:root{color-scheme:light dark;--bg:light-dark(#fafaf8,#181a18);--fg:light-dark(#1c2520,#e6ebe6);--muted:light-dark(#536159,#a4b2a8);--line:light-dark(#cbd3cc,#424c44);--surface:light-dark(#fff,#202620);--accent:light-dark(#166742,#8ddbb0);--wash:light-dark(#e8f5ed,#243d2c);--bad:light-dark(#ad2531,#ffadb4);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:16px;background:var(--bg);color:var(--fg)}
+*{box-sizing:border-box}body{margin:0}main{max-width:1080px;margin:auto;padding:32px 28px 56px}header{display:flex;align-items:baseline;justify-content:space-between;gap:20px;padding-bottom:24px;border-bottom:1px solid var(--line)}a{color:inherit;text-underline-offset:4px}header a{font-size:14px;color:var(--muted)}h1{font-size:28px;line-height:1.2;font-weight:600;letter-spacing:-.025em;margin:0}h2{font-size:16px;margin:0;font-weight:600}p{margin:0;line-height:1.6}.intro{padding:24px 0;max-width:70ch}.intro p{color:var(--muted);margin-top:8px}.toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:20px}button,select,input,textarea{font:inherit;color:inherit}button,select,.file-label{min-height:40px;border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:8px 12px;cursor:pointer}button:hover,.file-label:hover{border-color:var(--accent)}button:disabled{opacity:.45;cursor:default}button:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible,.file-label:focus-within{outline:3px solid var(--accent);outline-offset:3px}button.primary{background:var(--fg);color:var(--bg);border-color:var(--fg)}.quiet{background:transparent}.file-label input{position:absolute;width:1px;height:1px;opacity:0}.field-label{display:flex;gap:6px;align-items:center;margin-left:auto;color:var(--muted);font-size:14px}.field-label input{width:120px;padding:8px;border:1px solid var(--line);border-radius:4px;background:var(--surface)}.rule-area{border-block:1px solid var(--line);padding:18px 0;margin-bottom:20px}.rule-header{display:flex;justify-content:space-between;gap:16px;align-items:center;margin-bottom:10px}.rule-header span{font-size:14px;color:var(--muted)}#rules{width:100%;max-width:100%}#rule-help{font-size:14px;color:var(--muted);margin-top:8px}.table-head,.record{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:20px}.table-head{color:var(--muted);font-size:13px;padding-bottom:10px}.record{padding:16px 0;border-top:1px solid var(--line);align-items:start}.before{white-space:pre-wrap;overflow-wrap:anywhere;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:14px;line-height:1.6}.record-id{font:12px system-ui;color:var(--muted);display:block;margin-top:4px}.result{min-width:0}.result textarea{width:100%;min-height:48px;resize:vertical;display:block;line-height:1.5;border:1px solid var(--line);border-radius:4px;padding:10px;background:var(--surface)}.result textarea.changed{background:var(--wash);color:var(--accent)}.row-actions{display:flex;gap:14px;align-items:center;margin-top:6px;flex-wrap:wrap}.row-actions button{font-size:12px;min-height:28px;padding:3px 0;border:none;background:none;text-decoration:underline;text-underline-offset:3px}.example-tag{font-size:12px;color:var(--accent)}.bottom{border-top:1px solid var(--line);padding-top:20px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:10px}#summary{margin-right:auto;font-size:14px}#status{min-height:48px;margin-top:16px;color:var(--muted);font-size:14px}#status.error{color:var(--bad)}details{margin-top:28px;color:var(--muted);font-size:14px}summary{cursor:pointer}details p{margin-top:8px;max-width:72ch}code{font-family:ui-monospace,monospace}footer{margin-top:32px;color:var(--muted);font-size:12px}::selection{background:var(--accent);color:var(--bg)}@media(max-width:600px){main{padding:20px 16px 40px}header{align-items:center}h1{font-size:24px}.table-head{display:none}.record{grid-template-columns:1fr;gap:10px}.field-label{margin-left:0;width:100%}.toolbar button,.toolbar select,.file-label{min-height:44px}.bottom button{min-height:44px}#summary{width:100%}.rule-header{align-items:start;flex-direction:column;gap:4px}.before{font-size:13px}.row-actions button{min-height:44px}}
+#rule-description{display:none;overflow-wrap:anywhere;margin-top:8px;font-size:14px;color:var(--muted)}@media(max-width:600px){#rule-description{display:block}}
+</style>
+</head>
+<body>
+<main>
+<header><h1>Show me</h1><a href="https://github.com/ninondev/show-me">Source on GitHub</a></header>
+<section class="intro"><h2>Teach an edit</h2><p>Change one result. Compare the rules that fit, then try another example. Save the operation to use it on your next batch.</p></section>
+<div class="toolbar">
+  <select id="demo" aria-label="Example dataset"><option value="files">File labels</option><option value="labels">Draft labels</option></select>
+  <button id="example" type="button">Try an example</button>
+  <label class="file-label">Open JSON<input type="file" id="data-file" accept=".json,application/json"></label>
+  <label class="file-label">Load operation<input type="file" id="recipe-file" accept=".json,application/json"></label>
+  <label class="field-label">Text field<input id="field" value="text" aria-label="Text field name"></label>
+</div>
+<section class="rule-area" aria-label="Operation preview">
+  <div class="rule-header"><h2 id="rule-title">Edit a result to find a rule</h2><span id="example-count">0 examples</span></div>
+  <select id="rules" aria-label="Choose the operation to preview" disabled><option>No operation yet</option></select>
+  <p id="rule-description"></p>
+  <p id="rule-help">Preview changes below before applying an operation.</p>
+</section>
+<div class="table-head" aria-hidden="true"><span>Current text</span><span>Result · edit to teach</span></div>
+<section id="records" aria-label="Before and after records"></section>
+<div class="bottom">
+  <span id="summary" role="status" aria-live="polite">No changes</span>
+  <button id="undo" disabled>Undo</button>
+  <button id="save-recipe" disabled>Save operation</button>
+  <button id="save-plan" disabled>Save plan for agent</button>
+  <button id="apply" class="primary" disabled>Apply to this copy</button>
+  <button id="download">Download JSON</button>
+</div>
+<p id="status" role="status" aria-live="polite">Your data stays in this browser. Downloads save a new file.</p>
+<details><summary>What can it learn?</summary><p>Literal replacements, prefixes and suffixes, case changes, outer-space trimming, and splitting words on spaces, slashes, underscores, dots or hyphens. It searches these operations locally. Use examples to distinguish rules that produce the same result on one record.</p><p>JSON records need a unique string <code>id</code> and a string in the chosen text field. Other fields are preserved. Limits: 1,000 records, 4,000 characters per text field and 2 MB per file. An exported operation contains its literal replacement text; review it before sharing.</p></details>
+<footer>Runs locally · No accounts, model calls or remote libraries</footer>
+</main>
+<script>/* The browser and CLI share these bounded, deterministic text operations. */
+(function (root) {
+  'use strict';
+  const LIMITS = Object.freeze({rows: 1000, text: 4000, bytes: 2_000_000, examples: 20, recipeBytes: 64_000, planBytes: 12_000_000});
+  const own = (object, key) => Object.prototype.hasOwnProperty.call(object, key);
+  const fail = message => { throw new Error(message); };
+  const exactKeys = (value, keys) => value && typeof value === 'object' && !Array.isArray(value) &&
+    Object.keys(value).length === keys.length && keys.every(key => own(value, key));
+  const string = value => typeof value === 'string' && value.length <= LIMITS.text && !value.includes('\0');
+
+  function readRows(source, field = 'text') {
+    if (typeof source !== 'string' || new TextEncoder().encode(source).length > LIMITS.bytes)
+      fail('Use a JSON file smaller than 2 MB.');
+    if (!string(field) || !field || ['id', '__proto__', 'constructor', 'prototype'].includes(field))
+      fail('Choose a text field other than id.');
+    const rows = JSON.parse(source);
+    if (!Array.isArray(rows) || !rows.length || rows.length > LIMITS.rows) fail('Use 1 to 1000 records.');
+    const ids = new Set();
+    for (const row of rows) {
+      if (!row || typeof row !== 'object' || Array.isArray(row) || !own(row, 'id') ||
+          !string(row.id) || !row.id || ids.has(row.id) || !own(row, field) || !string(row[field]))
+        fail('Each record needs a unique string id and a string in the chosen field (up to 4000 characters).');
+      ids.add(row.id);
+    }
+    textSpans(source, field);
+    return rows;
+  }
+
+  // Locate the editable JSON strings without serializing unrelated values.
+  function textSpans(source, field) {
+    let at = 0;
+    const space = () => { while (/\s/.test(source[at] ?? '') && at < source.length) at++; };
+    function quoted() {
+      const begin = at++;
+      while (at < source.length) {
+        if (source[at] === '\\') at += 2;
+        else if (source[at++] === '"') break;
+      }
+      return JSON.parse(source.slice(begin, at));
+    }
+    function skip() {
+      space();
+      if (source[at] === '"') { quoted(); return; }
+      if (source[at] === '[' || source[at] === '{') {
+        const close = source[at++] === '[' ? ']' : '}';
+        space();
+        while (source[at] !== close) {
+          if (source[at] === ',' || source[at] === ':') at++;
+          else skip();
+          space();
+        }
+        at++; return;
+      }
+      while (at < source.length && !/[\s,}\]]/.test(source[at])) at++;
+    }
+    space(); at++;
+    const spans = [];
+    space();
+    while (source[at] !== ']') {
+      at++; space();
+      const keys = new Set(); let span;
+      while (source[at] !== '}') {
+        const key = quoted();
+        if (keys.has(key)) fail('Duplicate record keys are not supported.');
+        keys.add(key); space(); at++; space();
+        const start = at; skip();
+        if (key === field) span = {start, end: at};
+        space(); if (source[at] === ',') { at++; space(); }
+      }
+      spans.push(span); at++; space(); if (source[at] === ',') { at++; space(); }
+    }
+    return spans;
+  }
+
+  function writeChanges(source, rows, field, changes) {
+    const spans = textSpans(source, field);
+    const replacements = new Map(changes.map(change => [change.id, change.after]));
+    let output = '', previous = 0;
+    for (const [index, row] of rows.entries()) {
+      if (!replacements.has(row.id)) continue;
+      const {start, end} = spans[index];
+      output += source.slice(previous, start) + JSON.stringify(replacements.get(row.id));
+      previous = end;
+    }
+    output += source.slice(previous);
+    if (new TextEncoder().encode(output).length > LIMITS.bytes) fail('The result exceeds the 2 MB data limit.');
+    return output;
+  }
+
+  const cases = ['keep', 'lower', 'upper', 'sentence', 'title'];
+  function changeCase(value, mode) {
+    if (mode === 'lower') return value.toLowerCase();
+    if (mode === 'upper') return value.toUpperCase();
+    if (mode === 'sentence') {
+      const chars = Array.from(value.toLowerCase());
+      return chars.length ? chars[0].toUpperCase() + chars.slice(1).join('') : '';
+    }
+    if (mode === 'title') return value.toLowerCase().replace(/(^|\s)(\S)/gu, (_, space, char) => space + char.toUpperCase());
+    return value;
+  }
+
+  function validateRecipe(recipe) {
+    if (!exactKeys(recipe, ['schema', 'field', 'operation']) || recipe.schema !== 1 ||
+        !string(recipe.field) || !recipe.field || ['id', '__proto__', 'constructor', 'prototype'].includes(recipe.field))
+      fail('Invalid recipe.');
+    const op = recipe.operation;
+    if (!op || typeof op !== 'object') fail('Invalid operation.');
+    if (op.kind === 'replace') {
+      if (!exactKeys(op, ['kind', 'find', 'with', 'at']) || !string(op.find) || !string(op.with) ||
+          !['start', 'end', 'all'].includes(op.at) || (!op.find && op.at === 'all') || op.find === op.with)
+        fail('Invalid literal replacement.');
+    } else if (op.kind === 'case') {
+      if (!exactKeys(op, ['kind', 'mode', 'trim']) || !cases.includes(op.mode) || typeof op.trim !== 'boolean')
+        fail('Invalid case operation.');
+    } else if (op.kind === 'tokens') {
+      if (!exactKeys(op, ['kind', 'dropStart', 'dropEnd', 'join', 'mode']) ||
+          !Number.isInteger(op.dropStart) || op.dropStart < 0 || op.dropStart > 8 ||
+          !Number.isInteger(op.dropEnd) || op.dropEnd < 0 || op.dropEnd > 8 ||
+          ![' ', '-', '_', '.', '/', ''].includes(op.join) || !cases.includes(op.mode))
+        fail('Invalid word operation.');
+    } else fail('Unknown operation.');
+    return recipe;
+  }
+
+  function transform(value, operation) {
+    const op = operation;
+    if (op.kind === 'case') return changeCase(op.trim ? value.trim() : value, op.mode);
+    if (op.kind === 'tokens') {
+      const parts = value.split(/[\s/_.-]+/u).filter(Boolean);
+      if (parts.length <= op.dropStart + op.dropEnd) return value;
+      return changeCase(parts.slice(op.dropStart, parts.length - op.dropEnd).join(op.join), op.mode);
+    }
+    if (op.at === 'start') return value.startsWith(op.find) ? op.with + value.slice(op.find.length) : value;
+    if (op.at === 'end') return value.endsWith(op.find) ? value.slice(0, value.length - op.find.length) + op.with : value;
+    return value.split(op.find).join(op.with);
+  }
+
+  function suggest(rows, examples, field = 'text') {
+    readRows(JSON.stringify(rows), field);
+    if (!Array.isArray(examples) || examples.length > LIMITS.examples) fail('Use up to 20 example edits.');
+    const seen = new Set();
+    const pairs = examples.map(example => {
+      if (!exactKeys(example, ['id', 'after']) || !string(example.after) || seen.has(example.id)) fail('Invalid example.');
+      const row = rows.find(row => row.id === example.id);
+      if (!row) fail('An example refers to a missing record.');
+      seen.add(example.id);
+      return {before: row[field], after: example.after};
+    });
+    const changed = pairs.find(pair => pair.before !== pair.after);
+    if (!changed) return [];
+    const candidates = [];
+    const add = operation => candidates.push({schema: 1, field, operation});
+    const a = Array.from(changed.before), b = Array.from(changed.after);
+    let start = 0, end = 0;
+    while (start < Math.min(a.length, b.length) && a[start] === b[start]) start++;
+    while (end < Math.min(a.length, b.length) - start && a[a.length - 1 - end] === b[b.length - 1 - end]) end++;
+    const find = a.slice(start, a.length - end).join('');
+    const replacement = b.slice(start, b.length - end).join('');
+    if (start === 0) add({kind: 'replace', find, with: replacement, at: 'start'});
+    if (end === 0) add({kind: 'replace', find, with: replacement, at: 'end'});
+    if (find) add({kind: 'replace', find, with: replacement, at: 'all'});
+    for (const trim of [false, true]) for (const mode of cases) add({kind: 'case', mode, trim});
+    const length = changed.before.split(/[\s/_.-]+/u).filter(Boolean).length;
+    for (let dropStart = 0; dropStart <= Math.min(8, length - 1); dropStart++) {
+      for (let dropEnd = 0; dropEnd <= Math.min(8, length - dropStart - 1); dropEnd++) {
+        for (const join of [' ', '-', '_', '.', '/', '']) for (const mode of cases)
+          add({kind: 'tokens', dropStart, dropEnd, join, mode});
+      }
+    }
+    const keys = new Set();
+    return candidates.filter(recipe => {
+      const key = JSON.stringify(recipe);
+      if (keys.has(key) || !pairs.every(pair => transform(pair.before, recipe.operation) === pair.after)) return false;
+      keys.add(key);
+      return true;
+    }).sort((left, right) => Number(left.operation.kind === 'replace' && left.operation.find === changed.before) -
+      Number(right.operation.kind === 'replace' && right.operation.find === changed.before));
+  }
+
+  function describe(recipe) {
+    validateRecipe(recipe);
+    const op = recipe.operation, quote = value => JSON.stringify(value);
+    if (op.kind === 'replace') {
+      if (!op.find) return `${op.at === 'start' ? 'Add prefix' : 'Add suffix'} ${quote(op.with)}`;
+      return `Replace ${quote(op.find)} with ${quote(op.with)} ${op.at === 'all' ? 'everywhere' : 'at the ' + op.at}`;
+    }
+    const mode = {keep: 'keep case', lower: 'lowercase', upper: 'UPPERCASE', sentence: 'Sentence case', title: 'Title Case'}[op.mode];
+    if (op.kind === 'case') return (op.trim ? 'Trim outer spaces; ' : '') + mode;
+    return `Split on spaces / _ . -; drop ${op.dropStart} from start and ${op.dropEnd} from end; join with ${quote(op.join)}; ${mode}`;
+  }
+
+  function preview(rows, recipe, selected = null) {
+    validateRecipe(recipe);
+    readRows(JSON.stringify(rows), recipe.field);
+    if (selected !== null && (!Array.isArray(selected) || new Set(selected).size !== selected.length ||
+        selected.some(id => !rows.some(row => row.id === id)))) fail('Invalid record selection.');
+    const ids = selected === null ? null : new Set(selected);
+    return rows.map(row => {
+      const before = row[recipe.field];
+      const after = ids === null || ids.has(row.id) ? transform(before, recipe.operation) : before;
+      if (!string(after)) fail('A result exceeds the 4000-character limit.');
+      return {id: row.id, before, after};
+    }).filter(change => change.before !== change.after);
+  }
+
+  async function hash(text) {
+    const bytes = await root.crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+    return Array.from(new Uint8Array(bytes), byte => byte.toString(16).padStart(2, '0')).join('');
+  }
+
+  async function makePlan(source, recipe, selected = null) {
+    validateRecipe(recipe);
+    const rows = readRows(source, recipe.field);
+    const changes = preview(rows, recipe, selected);
+    if (!changes.length) fail('This operation changes no records.');
+    writeChanges(source, rows, recipe.field, changes);
+    const plan = {schema: 1, sourceHash: await hash(source), recipe, selected, changes};
+    if (new TextEncoder().encode(JSON.stringify(plan, null, 2)).length > LIMITS.planBytes) fail('This plan exceeds the 12 MB plan limit.');
+    return plan;
+  }
+
+  async function execute(source, plan) {
+    if (!exactKeys(plan, ['schema', 'sourceHash', 'recipe', 'selected', 'changes']) || plan.schema !== 1)
+      fail('Invalid plan.');
+    if (await hash(source) !== plan.sourceHash) fail('The source changed. Preview the operation again.');
+    const expected = await makePlan(source, plan.recipe, plan.selected);
+    if (JSON.stringify(expected) !== JSON.stringify(plan)) fail('The plan changed. Preview the operation again.');
+    const rows = readRows(source, plan.recipe.field);
+    return writeChanges(source, rows, plan.recipe.field, plan.changes);
+  }
+
+  const api = {LIMITS, readRows, validateRecipe, suggest, describe, preview, hash, makePlan, execute};
+  if (typeof module !== 'undefined' && module.exports) module.exports = api;
+  else root.ShowMeOperations = api;
+})(globalThis);
+</script>
+<script type="application/json" id="boot">{"source":"[\n  {\"id\":\"profile\",\"text\":\"draft/user-profile.ts\",\"team\":\"accounts\"},\n  {\"id\":\"billing\",\"text\":\"draft/billing-history.ts\",\"team\":\"payments\"},\n  {\"id\":\"settings\",\"text\":\"draft/account-settings.ts\",\"team\":\"accounts\"},\n  {\"id\":\"archive\",\"text\":\"archive/old-user-profile.ts\",\"team\":\"archive\"},\n  {\"id\":\"search\",\"text\":\"draft/search-results.ts\",\"team\":\"search\"},\n  {\"id\":\"draft\",\"text\":\"draft\",\"team\":\"notes\"}\n]\n","field":"text"}</script>
+<script>
+(() => {
+  'use strict';
+  const ops = window.ShowMeOperations;
+  const $ = id => document.getElementById(id);
+  const demos = {
+    files: [
+      {id:'profile',text:'draft/user-profile.ts',team:'accounts'},
+      {id:'billing',text:'draft/billing-history.ts',team:'payments'},
+      {id:'settings',text:'draft/account-settings.ts',team:'accounts'},
+      {id:'archive',text:'archive/old-user-profile.ts',team:'archive'},
+      {id:'search',text:'draft/search-results.ts',team:'search'},
+      {id:'draft',text:'draft',team:'notes'}],
+    labels: [
+      {id:'one',text:'[draft] Setup guide',category:'guide'},
+      {id:'two',text:'[draft] API reference',category:'reference'},
+      {id:'three',text:'Notes on [draft] status',category:'notes'},
+      {id:'four',text:'[draft] Quick start',category:'guide'},
+      {id:'five',text:'Release notes',category:'notes'}]
+  };
+  const boot = JSON.parse($('boot').textContent);
+  let source = boot.source, field = boot.field, rows, rules = [], selected = 0, imported = false, busy = false;
+  let examples = new Map(), history = [], lastRecipe = null;
+  $('field').value = field;
+  function message(text, error = false) { $('status').textContent = text; $('status').classList.toggle('error', error); }
+  function rule() { return rules[selected]; }
+  function compute() {
+    if (!imported) rules = ops.suggest(rows, [...examples].map(([id, after]) => ({id, after})), field);
+    selected = Math.min(selected, Math.max(0, rules.length - 1));
+  }
+  function teach(id, value, remove = false) {
+    const next = new Map(examples);
+    if (remove) next.delete(id); else next.set(id, value);
+    try {
+      const candidates = ops.suggest(rows, [...next].map(([id, after]) => ({id, after})), field);
+      if (candidates.length) ops.preview(rows, candidates[0]);
+      examples = next; rules = candidates; selected = 0; imported = false;
+      message('Example updated. Review the proposed changes.');
+    } catch (error) { rules = []; message(error.message, true); }
+    refresh();
+  }
+  function refresh() {
+    let changes = [];
+    try { changes = rule() ? ops.preview(rows, rule()) : []; }
+    catch (error) { rules = []; selected = 0; message(error.message, true); }
+    $('rules').replaceChildren();
+    for (const [index, recipe] of rules.entries()) {
+      const option = document.createElement('option'); option.value = index; option.textContent = ops.describe(recipe); $('rules').append(option);
+    }
+    if (!rules.length) { const option = document.createElement('option'); option.textContent = examples.size ? 'No supported rule fits every example' : 'No operation yet'; $('rules').append(option); }
+    $('rules').value = String(selected); $('rules').disabled = busy || !rules.length;
+    $('rule-description').textContent = rule() ? ops.describe(rule()) : '';
+    $('rule-title').textContent = imported ? 'Saved operation' : rules.length ? `${rules.length} ${rules.length === 1 ? 'rule fits' : 'rules fit'} your examples` : examples.size ? 'Try a different example' : 'Edit a result to find a rule';
+    $('example-count').textContent = `${examples.size} ${examples.size === 1 ? 'example' : 'examples'}`;
+    $('rule-help').textContent = rules.length > 1 ? 'Choose a rule to compare its results. Keep a record unchanged to rule out an unwanted edit.' : 'Inspect every change. Apply affects this browser copy; save a plan to pass the same changes to your agent.';
+    const after = new Map(changes.map(change => [change.id, change.after]));
+    for (const [index, row] of rows.entries()) {
+      const input = document.getElementById('edit-' + index);
+      const value = examples.has(row.id) ? examples.get(row.id) : (after.get(row.id) ?? row[field]);
+      if (document.activeElement !== input) input.value = value;
+      input.classList.toggle('changed', value !== row[field]);
+      input.disabled = busy;
+      const tag = input.parentElement.querySelector('.example-tag');
+      tag.textContent = examples.has(row.id) ? (value === row[field] ? 'Keep unchanged' : 'Your example') : '';
+      input.parentElement.querySelector('[data-clear]').hidden = !examples.has(row.id);
+    }
+    $('summary').textContent = changes.length ? `${changes.length} of ${rows.length} records will change` : `${rows.length} records · no changes`;
+    for (const id of ['apply', 'save-plan']) $(id).disabled = busy || !changes.length;
+    $('save-recipe').disabled = busy || (!rule() && !lastRecipe); $('undo').disabled = busy || !history.length;
+    for (const id of ['demo', 'example', 'data-file', 'recipe-file', 'field', 'download']) $(id).disabled = busy;
+    for (const button of $('records').querySelectorAll('button')) button.disabled = busy;
+  }
+  function renderRows() {
+    $('records').replaceChildren();
+    rows.forEach((row, index) => {
+      const record = document.createElement('div'); record.className = 'record';
+      const before = document.createElement('div'); before.className = 'before'; before.textContent = row[field];
+      const id = document.createElement('span'); id.className = 'record-id'; id.textContent = row.id; before.append(id);
+      const result = document.createElement('div'); result.className = 'result';
+      const input = document.createElement('textarea'); input.id = 'edit-' + index; input.rows = 1; input.maxLength = 4000; input.value = row[field]; input.setAttribute('aria-label', 'Result for ' + row.id);
+      input.addEventListener('input', () => {
+        teach(row.id, input.value);
+      });
+      const actions = document.createElement('div'); actions.className = 'row-actions';
+      const tag = document.createElement('span'); tag.className = 'example-tag';
+      const keep = document.createElement('button'); keep.type = 'button'; keep.textContent = 'Keep unchanged'; keep.setAttribute('aria-label', 'Keep ' + row.id + ' unchanged');
+      keep.onclick = () => teach(row.id, row[field]);
+      const clear = document.createElement('button'); clear.type = 'button'; clear.textContent = 'Remove example'; clear.dataset.clear = ''; clear.hidden = true; clear.setAttribute('aria-label', 'Remove example for ' + row.id);
+      clear.onclick = () => teach(row.id, '', true);
+      actions.append(tag, keep, clear); result.append(input, actions); record.append(before, result); $('records').append(record);
+    });
+    refresh();
+  }
+  function load(text, nextField, resetHistory = true) {
+    const parsed = ops.readRows(text, nextField);
+    source = text; field = nextField; rows = parsed; examples.clear(); rules = []; selected = 0; imported = false;
+    if (resetHistory) { history = []; lastRecipe = null; } $('field').value = field; renderRows();
+  }
+  function download(name, value, type = 'application/json') {
+    const url = URL.createObjectURL(new Blob([value], {type}));
+    const anchor = document.createElement('a'); anchor.href = url; anchor.download = name; anchor.click(); setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+  async function guarded(action) {
+    if (busy) return;
+    busy = true;
+    try { refresh(); await action(); } catch (error) { message(error.message, true); }
+    finally { busy = false; refresh(); }
+  }
+  $('rules').onchange = () => { selected = Number($('rules').value); refresh(); };
+  $('demo').onchange = () => { load(JSON.stringify(demos[$('demo').value], null, 2) + '\n', 'text'); message('Example data loaded. Try an example or edit any result.'); };
+  $('example').onclick = () => {
+    load(JSON.stringify(demos[$('demo').value], null, 2) + '\n', 'text');
+    examples.set(rows[0].id, $('demo').value === 'files' ? 'User profile' : 'Setup guide');
+    compute(); refresh(); message($('demo').value === 'labels' ? 'The prefix and everywhere rules both fit. Keep the notes record unchanged to distinguish them.' : 'Compare the rules, then edit another result to narrow the choice.');
+  };
+  $('field').onchange = () => { try { load(source, $('field').value); } catch (error) { $('field').value = field; message(error.message, true); } };
+  $('data-file').onchange = async event => {
+    const file = event.target.files[0]; if (!file) return;
+    await guarded(async () => {
+      if (file.size > ops.LIMITS.bytes) throw new Error('Use a file smaller than 2 MB.');
+      const reusable = rule() || lastRecipe;
+      const text = await file.text();
+      const nextRows = ops.readRows(text, field);
+      if (reusable && reusable.field === field) ops.preview(nextRows, reusable);
+      load(text, field);
+      if (reusable && reusable.field === field) { imported = true; rules = [reusable]; refresh(); }
+      message('Loaded ' + file.name + (reusable ? '. Review the saved operation on this batch.' : '.'));
+    });
+    event.target.value = '';
+  };
+  $('recipe-file').onchange = async event => {
+    const file = event.target.files[0]; if (!file) return;
+    await guarded(async () => {
+      if (file.size > ops.LIMITS.recipeBytes) throw new Error('This operation file is too large.');
+      const recipe = ops.validateRecipe(JSON.parse(await file.text()));
+      ops.preview(ops.readRows(source, recipe.field), recipe);
+      field = recipe.field; $('field').value = field; examples.clear(); imported = true; rules = [recipe]; selected = 0; renderRows(); message('Saved operation loaded. Review its effect on this batch.');
+    });
+    event.target.value = '';
+  };
+  $('save-recipe').onclick = () => guarded(async () => { download('show-me-operation.json', JSON.stringify(rule() || lastRecipe, null, 2) + '\n'); message('Operation downloaded. Load it with a new batch to reuse it.'); });
+  $('save-plan').onclick = () => guarded(async () => { const plan = await ops.makePlan(source, rule()); download('show-me-plan.json', JSON.stringify(plan, null, 2) + '\n'); message('Plan downloaded. It applies only to this exact source version.'); });
+  $('apply').onclick = () => guarded(async () => {
+    const plan = await ops.makePlan(source, rule()); const result = await ops.execute(source, plan);
+    lastRecipe = rule(); history.push({source, field, recipe: lastRecipe}); if (history.length > 10) history.shift();
+    load(result, field, false); message(`Applied ${plan.changes.length} changes to this copy. Download JSON to save the result.`);
+  });
+  $('undo').onclick = () => { const prior = history.pop(); if (!prior) return; load(prior.source, prior.field, false); imported = true; rules = [prior.recipe]; refresh(); message('Previous batch restored.'); };
+  $('download').onclick = () => download('show-me-result.json', source);
+  load(source, field);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+{
+  "schema": 1,
+  "task": "project-description",
+  "revision": "sample-1",
+  "action": "update-description",
+  "fields": [
+    {
+      "id": "description",
+      "kind": "text",
+      "value": "Trail notes is an application that allows people to record walking routes and add notes about places along the way.",
+      "allowEmpty": false
+    }
+  ]
+}

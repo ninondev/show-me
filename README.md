@@ -2,52 +2,49 @@
 
 English | [简体中文](README.zh-CN.md)
 
-Show me helps coding agents present useful answers and turn repeated text edits
-into reusable local operations.
+Show me helps coding agents put useful views inside the conversation, then
+continue the task from what you edit, choose or adjust.
 
-The skill chooses a form for each question and uses your app's existing tools.
-It keeps explanations in the conversation where possible, shows visual options
-before asking you to choose, and opens or embeds finished work for inspection.
+A short question still gets a short answer. When a view helps, it starts with
+the content you are already discussing. Edit a passage in place, choose between
+real previews, or move a control and see the result change. Keep talking whenever
+you prefer; the agent carries the context forward.
 
-## Try an edit
+## Try the interaction
 
-[Open the live demo](https://ninondev.github.io/show-me/), then click **Try an example**.
-One filename edit produces a preview for the whole batch. Edit another result to
-distinguish rules that fit the first example, then save the operation for another
-batch.
+[Open the examples](https://ninondev.github.io/show-me/). Edit the wording, choose
+a study-plan view, or adjust a session's duration. Each example has a local
+receiver that checks your input and updates the sample. The page makes no model
+calls and contains synthetic data.
 
-For a useful ambiguity, choose **Draft labels** and try its example. Removing
-`[draft] ` from the start and removing it everywhere both fit the first edit.
-Click **Keep unchanged** on the notes record: the unwanted rule disappears.
+Inside a supported chat host, an explicit action sends your changes to the
+current conversation. The agent checks the task and source version, does the
+agreed work, and reports what happened. Typing and exploring stay local.
 
-The editor runs in your browser. It searches a small set of text operations
-locally, so trying examples and reusing a saved operation make no model calls.
-It supports literal replacements, prefix/suffix edits, case changes, trimming,
-and word extraction. You can download the result or pass a reviewed plan to your
-agent. Each plan is checked against the source version before it runs.
-
-To make a self-contained tool with your own data, use Node 20 or later:
-
-```sh
-node skills/show-me/scripts/operate.mjs render examples/files.json --out edit.html
-```
-
-Open `edit.html` in your browser. The file embeds its input data and works offline.
-See the [operation workflow](skills/show-me/references/operations.md) for input
-format, supported operations, file limits, and CLI usage.
+The bundled editable-answer example calls Codex's follow-up API. Its automated
+checks cover response validation and submission behavior. A real host round trip
+requires a user submission and the receiving agent's execution; a local demo or
+a mocked send does not exercise that path. Claude and ZCode integration follows
+their active host instructions, with an adapter verified in that session.
 
 ## Use it
 
-After installation, ask your agent to use `show-me` with the current topic.
+After installing, ask your agent to use `show-me` on the current task.
 
-| Ask | The skill guides the agent to use |
+| Ask | Useful response |
 | --- | --- |
-| "How many minutes are in two hours?" | A short answer |
-| "Compare these two plans by price, limits, and cancellation terms." | A table with the same criteria for both plans |
-| "Show which steps depend on each other." | A diagram or numbered steps |
-| "Show how the total changes when I change the number of attendees." | An interactive view with useful controls, when the app supports it |
-| "Show two different layouts before I choose." | Comparable previews with different structures, followed by a choice |
-| "Save this explanation as a Markdown file for my team." | The requested file |
+| “How many minutes are in two hours?” | A direct answer |
+| “Compare these two plans by price, limits and cancellation.” | A comparison using the same criteria |
+| “This paragraph is close. Let me fix a few words.” | The actual passage, editable in the conversation |
+| “Show me both layouts before I choose.” | Comparable previews with a visible choice |
+| “What changes if I only have an hour?” | A control beside the result it changes |
+| “Use my changes and finish the file.” | The agent resumes the task and reports the actual result |
+| “Save this explanation for my team.” | The requested file |
+
+The skill guides the agent's choices. The small optional handoff helper validates
+text edits, choices and numbers; it leaves the layout and execution to the task.
+See [conversation handoffs](skills/show-me/references/conversation.md) for the
+snapshot format and receiving workflow.
 
 ## Install
 
@@ -57,57 +54,54 @@ Download this repository or clone it:
 git clone https://github.com/ninondev/show-me.git
 ```
 
-Copy the entire `skills/show-me/` folder into a skill directory your app reads.
-Include `references/`, `scripts/`, `assets/`, `agents/`, and `LICENSE`.
+Copy the entire `skills/show-me/` folder into a skill directory your app reads,
+including `references/`, `scripts/`, `assets/`, `agents/` and `LICENSE`.
 
 - Codex: `~/.agents/skills/`
 - Claude Code: `~/.claude/skills/`
 - ZCode and other apps: use the skill location documented by the app.
 
-If you already have a `show-me` skill, compare or back it up before replacing
-it. Start a new session, ask the agent to load `show-me`, and check that it
-found this copy.
+If `show-me` is already installed, compare or back it up before replacing it.
+Start a new session and ask the agent to load this copy. The optional scripts
+need Node 20 or later; the presentation guidance does not require Node.
 
 ## How it fits your app
 
-The [host reference](skills/show-me/references/hosts.md) covers Codex, Claude,
-ZCode, and terminals. The skill follows the tools available in the current
-session. Inline visuals use the app's renderer; text, tables, and numbered
-steps work in clients without one.
+The skill uses the active host's renderer, question controls and follow-up API.
+Read the [host reference](skills/show-me/references/hosts.md) for Codex, Claude,
+ZCode and terminals. In a client without interactive views, the conversation
+continues with text, tables or native questions.
 
-For finished work, the skill first uses the app's preview tools when they
-support the artifact. Otherwise, it uses the operating system's default
-application. Local HTML opened this way uses your default browser.
+Finished files open in the host's preview when supported, otherwise in the
+operating system's default application. Local HTML uses the default browser.
+An explicit request for a file, report, website or export sets the deliverable.
 
-Keep preferences such as your preferred diagram format in your own agent
-instructions. When you ask for a file, report, website, or export, that request
-sets the deliverable.
+## Batch edits
+
+The [batch text example](https://ninondev.github.io/show-me/operations.html) learns
+bounded transformations from examples and previews their effect on a whole batch.
+Save an operation to reuse it without model calls. This is an optional workflow
+for repeated text tasks; [its guide](skills/show-me/references/operations.md)
+covers JSON input, supported transformations and CLI execution.
 
 ## Contributing
-
-Run the deterministic operation checks and rebuild the demo:
 
 ```sh
 node --test tests/*.test.mjs
 node scripts/build-demo.mjs
 ```
 
-The tests cover learning from positive and negative examples, reuse on three
-new batches, unchanged data, stale plans, CLI execution and safe HTML embedding.
-Human effort, end-to-end model tokens and total task time still need comparison
-against ordinary agent editing, including tool preparation and review.
+Tests cover handoff validation, uncertain delivery, repeated submission, local
+receivers and the batch-operation engine. The [evaluation cases](evals/cases.json)
+and [rubric](evals/rubric.md) cover the agent's behavior. Exercise host integration
+in a real conversation and distinguish sending a response from completing work.
 
-The [evaluation cases](evals/cases.json) cover form selection, choices, exports,
-and missing host capabilities. Run them with a fresh agent, then assess its
-responses against the separate [rubric](evals/rubric.md). Give the rubric to
-the reviewer after the exercise.
-
-Check rendering, button actions, themes, and opening behavior in the apps
-affected by your change. Report which checks you ran.
+To compare effort or cost, include preparing the view, reviewing it and continuing
+the task. Total human time and model-token savings have not been measured.
 
 ## Origin and license
 
-Derived from [Charlie Hills's show-me](https://github.com/charlie947/show-me),
+Derived from [Charlie947's show-me](https://github.com/charlie947/show-me),
 at commit [`69e488e`](https://github.com/charlie947/show-me/blob/69e488e301e8d6f43b8ddc883cb2392b1dd45264/skills/show-me/SKILL.md).
 The original centers on HTML previews. This derivative draws on GPT-6's
 Intelligent UI to choose a presentation for each answer, with conversation

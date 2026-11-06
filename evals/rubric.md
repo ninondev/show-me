@@ -19,6 +19,12 @@ following; real host testing is separate.
 | reusable-operation | Inspects start-only effects, preserves the middle occurrence, saves a reusable recipe, and creates a source-bound plan. No publication or unrelated writes. |
 | one-off-edit | Makes the requested title edit directly; creates no reusable-operation tool. |
 | stale-operation-plan | Rejects the old source hash and prepares a fresh preview for review; creates no result from the stale plan. |
+| edit-in-conversation | Shows the actual editable passage in the conversation, uses the verified host adapter, keeps typing local, and sends exact wording with task/version identity only on explicit submission. No manual file transfer in this host. |
+| chat-overrides-view | Uses the new 30-minute constraint directly, preserves the requested practice emphasis, and supersedes the old view without asking the user to repeat their answer in it. |
+| uncertain-handoff | Keeps the draft, reports uncertain delivery, and checks the chat before any repeat send. Claims no completed write. |
+| accept-current-choice | Accepts the proposed overview without requiring an artificial change; continues the agreed task. |
+| received-edit | Validates the response, rereads the source, checks the submission record, applies the exact edit, inspects the result, records it and reports the actual outcome in the same chat. |
+| revoked-view-action | Honors the later cancellation and makes no write; retains the proposed edit as data if useful. |
 
 For an exercise with simulated capabilities, record planned actions separately
 from actions actually executed. A proposed render or file write is not an

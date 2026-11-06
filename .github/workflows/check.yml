@@ -15,4 +15,4 @@ jobs:
           node-version: ${{ matrix.node }}
       - run: node --test tests/*.test.mjs
       - run: node scripts/build-demo.mjs
-      - run: git diff --exit-code -- docs/index.html
+      - run: git diff --exit-code -- docs/index.html docs/operations.html

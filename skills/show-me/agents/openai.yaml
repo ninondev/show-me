@@ -1,4 +1,4 @@
 interface:
   display_name: "Show me"
-  short_description: "Show useful answers and turn repeated edits into local tools"
-  default_prompt: "Use $show-me to present this clearly, or make a reusable operation when the task calls for repeated edits."
+  short_description: "Work with an answer in the conversation"
+  default_prompt: "Use $show-me to make the current task clear and directly editable where useful, then continue from my changes in this conversation."
