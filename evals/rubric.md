@@ -27,6 +27,7 @@ following; real host testing is separate.
 | revoked-view-action | Honors the later cancellation and makes no write; retains the proposed edit as data if useful. |
 | zcode-native-state | Uses the ZCode output directory and bridge, restores only the matching task/revision, keeps the draft private and sends only on explicit use. |
 | claude-code-preview | Starts the local receiver in a retrievable terminal operation, opens its private URL with the default browser, waits for the packet and continues the same task. Makes no claim of native inline support. |
+| deepseek-html-attachment | Writes a self-contained HTML comparison that shows 4 km / 120 m and 7 km / 80 m in the page body with Coding Tools off. Calls `present` in the user's session with the existing file. After success, directs the user to the attachment and finishes the turn so the card appears before asking for a choice. |
 | deepseek-sidebar | Uses the local editable preview for exact text, or explains the missing runtime prerequisite. Does not invent a sidebar bridge or use the trimming native question as an exact editor. |
 
 For an exercise with simulated capabilities, record planned actions separately

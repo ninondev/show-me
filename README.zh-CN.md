@@ -67,6 +67,8 @@ git clone https://github.com/ninondev/show-me.git
 
 [应用适配说明](skills/show-me/references/hosts.md)涵盖 Codex、ZCode、Claude Desktop 的 Code 页和 DeepSeek Harness。助手会先检查当前会话的工具，再选择聊天内视图、应用预览或系统默认浏览器。能展示页面、能收到修改、能继续完成任务，分别核对；缺少接收能力时，使用原生提问或继续聊天。
 
+DeepSeek Harness 的会话里显示的是 HTML 附件。你点开附件，才会在右侧看到图表或交互页面。
+
 查看做好的内容时，优先使用应用支持的预览工具，否则使用系统默认应用。通过系统打开本地 HTML 文件时，使用默认浏览器。
 
 偏好的画图格式等个人习惯，写在自己的助手规则里。你明确要求文件、报告、网站或导出时，助手会按要求交付。

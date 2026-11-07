@@ -105,6 +105,11 @@
     "request": "Let me fix the wording, then continue this task with my edit."
   },
   {
+    "id": "deepseek-html-attachment",
+    "environment": "DeepSeek Harness exposes present. The task can write to its workspace. The user has Coding Tools off and wants to inspect two routes, one 4 km with 120 m of climbing and one 7 km with 80 m.",
+    "request": "Show me the two routes side by side so I can choose."
+  },
+  {
     "id": "deepseek-sidebar",
     "environment": "DeepSeek Harness 0.2.1-rc.5 exposes present and ask_user_question. The HTML sidebar has no page-to-agent bridge. The native question trims text. Local Node execution and retrievable output are available.",
     "request": "Let me edit this code passage and keep the leading spaces and final newline exactly."

@@ -21,11 +21,11 @@ Inside a supported chat host, an explicit action sends your changes to the
 current conversation. The agent checks the task and source version, does the
 agreed work, and reports what happened. Typing and exploring stay local.
 
-The editor includes inline adapters for Codex and ZCode. Desktop agents can also
-receive edits through a temporary local preview: the user clicks **Use this**,
-and the waiting task gets the response. The [host reference](skills/show-me/references/hosts.md)
-covers Claude Desktop's Code tab and DeepSeek Harness,
-including the capabilities that still need a real-client check.
+Codex and ZCode show the editor in the conversation. In DeepSeek Harness,
+a chart arrives as an HTML attachment. Click the file card to see it in the
+right sidebar. For tasks that need your exact edits back, the
+[host guide](skills/show-me/references/hosts.md) covers the separate local
+editor for Claude Desktop's Code tab and the experimental DeepSeek route.
 
 ## Use it
 

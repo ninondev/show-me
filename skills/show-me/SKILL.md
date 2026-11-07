@@ -31,6 +31,12 @@ Make one useful recommendation when the evidence supports it. If the user asked
 you to decide, decide. An interface must not turn that request into homework.
 An explicit request for a file, report, website or export sets the deliverable.
 
+In DeepSeek Harness, deliver charts and visual previews as HTML attachments.
+Write a self-contained HTML file in the task workspace, then call `present` in
+the user's session. The user clicks the attachment to open the sidebar preview.
+See the [DeepSeek instructions](references/hosts.md#deepseek-harness-desktop) for
+choices and edits that need to return to the task.
+
 ## Put the task inside the view
 
 Use the current content and constraints. Start at a useful result, with labels

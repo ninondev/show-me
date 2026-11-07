@@ -78,11 +78,24 @@ The project root is the nearest ancestor containing `.git`, or the task's workin
 directory when none exists. Confirm `/show-me` appears in the task's skill menu
 and loads this copy; a custom provider configuration can change these roots.
 
-In the inspected 0.2.1-rc.5 packages, `present({files:[{path, description}]})`
-exposes existing files through a card and right sidebar. Use self-contained HTML
-for visual results. Include meaningful initial markup: with Coding Tools off,
-the preview is static. With it on, the HTML runs in a sandboxed iframe with
-`allow-scripts`; it has no documented task-send or draft-storage bridge.
+For a chart, diagram or visual comparison, write a self-contained HTML file
+in the task workspace. Give it a descriptive name and leave it in place after
+delivery. In the user's session, call `present` with the file you just wrote.
+For example, if you created `route-comparison.html`, the tool takes:
+
+```json
+{"files":[{"path":"route-comparison.html","description":"Two routes compared by distance and elevation"}]}
+```
+
+DeepSeek Harness 0.2.1-rc.5 puts a file card at the end of the turn. Clicking the
+card opens the HTML in the right sidebar. The card points to the source file,
+so only announce the attachment after `present` succeeds. Relative paths start
+at the session's working directory. Pass a regular file the session can access.
+A missing file, a directory or a symlink as the final path component will fail.
+
+Put the chart and its labels in the page body, outside scripts and `<noscript>`,
+so they remain visible when Coding Tools are off. With Coding Tools on, scripts can run inside the preview.
+The sidebar has no documented way to send edits to the task or store a draft.
 
 For a choice or a short comment, use the root agent's `ask_user_question` tool.
 Its schema takes `questions` with `id`, `question`, optional `header`, `options`
@@ -92,10 +105,8 @@ leading and trailing whitespace, so use the editable preview for exact text.
 Check whether the active schema exposes timed questions; only that mode supplies
 the stable call id used for draft restoration. A pending result is still waiting.
 
-The file card appears at the end of the turn in this version. Deliver a new
-visual before a dependent native question, or refer to an already delivered
-visual. Do not block the same turn waiting for a choice about a card that has
-not appeared yet.
+If the user needs the visual to make a choice, finish delivering the attachment
+first. Ask for the choice in the next turn, when the card is visible.
 
 For exact edits, start the local receiver in the task's command tool:
 
