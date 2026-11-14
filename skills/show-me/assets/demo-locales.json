@@ -1,8 +1,8 @@
 {
   "en": {
     "page": {
-      "title": "Show me: work with the answer",
-      "description": "Show me is a skill for coding agents: useful views inside the conversation, with your edits returned to the current task.",
+      "title": "给我看看！",
+      "description": "给我看看！ is a skill for coding agents: useful views inside the conversation, with your edits returned to the current task.",
       "project": "Project",
       "language": "Language",
       "install": "Install",
@@ -47,7 +47,7 @@
       "usePlan": "Use this plan",
       "note": "These examples update sample content on this page. They run locally without a model. Inside a supported chat host, the same handoff sends your action to the ongoing conversation.",
       "chatHeading": "The chat stays open",
-      "chatBody": "Some answers need a sentence. Others benefit from a view you can work with. Show me asks the agent to choose for the task, carry your edits forward, and let you keep talking.",
+      "chatBody": "Some answers need a sentence. Others benefit from a view you can work with. 给我看看！ asks the agent to choose for the task, carry your edits forward, and let you keep talking.",
       "readSkill": "Read the skill",
       "agentHeading": "Use it with your agent",
       "agentBody": "Copy the skill folder into your agent’s skill directory. The editor includes inline adapters for Codex and ZCode. Desktop agents can also receive edits through a temporary local preview.",
@@ -98,8 +98,8 @@
   },
   "zh-CN": {
     "page": {
-      "title": "Show me：在对话里直接修改结果",
-      "description": "Show me 帮助编程助手在对话中展示可操作的内容，再根据你的修改继续完成任务。",
+      "title": "给我看看！",
+      "description": "在对话里改文字、选方案、调参数，编程助手根据你的修改继续完成任务。",
       "project": "项目",
       "language": "语言",
       "install": "安装",
@@ -144,10 +144,10 @@
       "usePlan": "采用这个计划",
       "note": "这里的操作只会更新网页里的示例内容，不调用模型。在支持回传的聊天应用里，点击采用会把修改交回当前对话。",
       "chatHeading": "想说什么，接着聊",
-      "chatBody": "有些问题，一句话就能说清。有些内容，直接改起来更方便。Show me 让助手按当前任务选择合适的形式，接住你的修改，也接住你接着说的话。",
+      "chatBody": "有些问题，一句话就能说清；有些内容，直接改更方便。你随时可以继续用文字说明，助手会结合前面的讨论和你的修改接着做。",
       "readSkill": "查看 skill",
       "agentHeading": "让你的助手用起来",
-      "agentBody": "把 skill 文件夹复制到助手的 skill 目录。文字编辑示例已接入 Codex 和 ZCode 的聊天内接口。另有临时的本机预览：点“采用”后，正在等待的任务直接收到修改，用户不用传文件。",
+      "agentBody": "把 skill 文件夹复制到助手的 skill 目录。文字编辑器已接入 Codex 和 ZCode 的聊天内接口，也提供临时的本机预览：点“采用”后，等待中的任务会收到修改，无需手动传文件。",
       "instructions": "查看安装方法",
       "license": "采用 MIT 许可证",
       "batch": "批量文字处理示例（英文）",

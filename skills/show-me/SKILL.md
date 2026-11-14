@@ -3,7 +3,7 @@ name: show-me
 description: Show an answer in the form that helps the current conversation. Use for explanations, comparisons, visual choices, or results the user should adjust directly and return to the agent's ongoing task.
 ---
 
-# Show me
+# 给我看看！
 
 Answer the current question. When seeing or touching the answer saves the user
 work, put the useful part in the conversation: a comparison, a diagram, an

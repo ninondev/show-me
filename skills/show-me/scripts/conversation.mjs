@@ -50,7 +50,7 @@ async function main(args) {
       if (options.out || !options.host) throw new Error('Serve requires --host and returns the response in this terminal.');
       const {serveSession} = await import('./preview.mjs');
       const server = await serveSession(session, options);
-      process.stderr.write('Show me preview: ' + server.url + '\nWaiting for an explicit use action. Keep this terminal task running.\n');
+      process.stderr.write('给我看看！ preview: ' + server.url + '\nWaiting for an explicit use action. Keep this terminal task running.\n');
       try {
         const response = await (options.open ? Promise.race([server.response, openerFailure(server.url)]) : server.response);
         process.stdout.write('SHOW_ME_RESPONSE\n' + JSON.stringify(response) + '\n');

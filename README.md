@@ -1,117 +1,101 @@
-# Show me
+# 给我看看！
 
-English | [简体中文](README.zh-CN.md)
+简体中文 | [English](README.en.md)
 
-Show me helps coding agents put useful views inside the conversation, then
-continue the task from what you edit, choose or adjust.
+给编程助手用的 skill，帮助它选择合适的回答形式。能用一句话说清的，就直接回答；需要比较、理解或修改时，再用表格、图或交互视图。
 
-A short question still gets a short answer. When a view helps, it starts with
-the content you are already discussing. Edit a passage in place, choose between
-real previews, or move a control and see the result change. Keep talking whenever
-you prefer; the agent carries the context forward.
+你可以直接改一段文字、对照预览选布局，或者调整参数，看看结果怎么变。
 
-## Try the interaction
+它使用当前应用已有的工具，尽量把这些操作留在对话里。需要挑选视觉方案时，先展示预览；做好的内容会直接打开或嵌入对话，方便检查。
 
-[Open the examples](https://ninondev.github.io/show-me/). Edit the wording, choose
-a study-plan view, or adjust a session's duration. Each example has a local
-receiver that checks your input and updates the sample. The page makes no model
-calls and contains synthetic data.
+## 使用
 
-Inside a supported chat host, an explicit action sends your changes to the
-current conversation. The agent checks the task and source version, does the
-agreed work, and reports what happened. Typing and exploring stay local.
+### 在对话里接着做
 
-Codex and ZCode show the editor in the conversation. In DeepSeek Harness,
-a chart arrives as an HTML attachment. Click the file card to see it in the
-right sidebar. For tasks that need your exact edits back, the
-[host guide](skills/show-me/references/hosts.md) covers the separate local
-editor for Claude Desktop's Code tab and the experimental DeepSeek route.
+一段话已经接近你的意思，就直接改那几个词；两种布局拿不准，就看着预览选；想知道时间缩短后怎么安排，就调一下参数，看看结果。
 
-## Use it
+在支持回传的应用中，点“采用”后，修改会回到当前对话。助手接着完成已经说好的任务，并告诉你实际改了什么。你也可以继续用文字说明，前面讨论过的内容不用重新交代。
 
-After installing, ask your agent to use `show-me` on the current task.
+[在线演示](https://ninondev.github.io/show-me/?lang=zh-CN)提供修改文字、选择布局和调整计划三个例子。操作只会更新网页里的示例内容，不调用模型。文字编辑器已接入 Codex 和 ZCode 的聊天内接口，也提供临时的本机预览：点“采用”后，等待中的任务会收到修改，无需手动传文件。各应用的入口和验证情况见[应用适配说明](skills/show-me/references/hosts.md)。
 
-| Ask | Useful response |
+### 选择回答形式
+
+安装后，让助手对当前问题使用 `show-me`，例如：“用 show-me 比较这两个方案。”项目的对外名称是「给我看看！」，安装目录和调用名仍用 `show-me`，原有用法不变。
+
+| 你可以这样问 | 这份 skill 建议的回答形式 |
 | --- | --- |
-| “How many minutes are in two hours?” | A direct answer |
-| “Compare these two plans by price, limits and cancellation.” | A comparison using the same criteria |
-| “This paragraph is close. Let me fix a few words.” | The actual passage, editable in the conversation |
-| “Show me both layouts before I choose.” | Comparable previews with a visible choice |
-| “What changes if I only have an hour?” | A control beside the result it changes |
-| “Use my changes and finish the file.” | The agent resumes the task and reports the actual result |
-| “Save this explanation for my team.” | The requested file |
+| 「两小时是多少分钟？」 | 直接给出答案 |
+| 「按价格、使用限制和退订条件，比较这两个方案。」 | 按相同的项目列成对比表 |
+| 「画出这些步骤之间的依赖关系。」 | 用图或编号步骤说明 |
+| 「让我调整参加人数，看看总费用怎么变。」 | 应用支持时，提供可以调整人数的交互视图 |
+| 「给我看两种不同的布局，再让我选。」 | 先展示结构不同、便于比较的预览，再询问选择 |
+| 「把这份说明存成 Markdown 文件，给团队使用。」 | 保存为 Markdown 文件 |
 
-The skill guides the agent's choices. The small optional handoff helper validates
-text edits, choices and numbers; it leaves the layout and execution to the task.
-See [conversation handoffs](skills/show-me/references/conversation.md) for the
-snapshot format and receiving workflow.
+### 把一次修改变成可重复使用的操作
 
-## Install
+[打开演示](https://ninondev.github.io/show-me/operations.html)，点击 **Try an example**。改一个文件名，就能预览整批结果；再改一个例子，可以排除不符合要求的规则。选好后保存操作，下次换一批数据继续用。
 
-Download this repository or clone it:
+想看规则怎样被纠正，可以选择 **Draft labels**。第一处修改既符合「删掉开头的 `[draft] `」，也符合「删掉所有 `[draft] `」。在 notes 那条记录上点击 **Keep unchanged**，后一个规则就会被排除。
+
+编辑器在浏览器本地运行，支持文字替换、前后缀修改、大小写转换、去掉首尾空格和提取词语。尝试例子、重复执行已保存的操作都不调用模型。结果可以下载，也可以把检查过的修改计划交给助手执行；执行前会核对原文件版本。
+
+用自己的数据生成离线工具，需要 Node 20 或更新版本：
+
+```sh
+node skills/show-me/scripts/operate.mjs render examples/files.json --out edit.html
+```
+
+用浏览器打开生成的 `edit.html`。这个文件包含输入数据，分享前请检查内容。[操作说明](skills/show-me/references/operations.md)列出了数据格式、支持范围和命令行用法。
+
+<a id="install"></a>
+
+## 安装
+
+下载这个仓库，或运行：
 
 ```sh
 git clone https://github.com/ninondev/show-me.git
 ```
 
-Copy the entire `skills/show-me/` folder into a skill directory your app reads,
-including `references/`, `scripts/`, `assets/`, `agents/` and `LICENSE`.
+把整个 `skills/show-me/` 文件夹复制到应用的 skill 目录，保留其中的 `references/`、`scripts/`、`assets/`、`agents/` 和 `LICENSE`。
 
-- Codex: `~/.agents/skills/`
-- Claude Code: `~/.claude/skills/`
-- ZCode and DeepSeek Harness: follow the
-  [app-specific installation and capability notes](skills/show-me/references/hosts.md).
-  For ZIP import, use the release package with `SKILL.md` at its root.
+- Codex：`~/.agents/skills/`
+- Claude Code：`~/.claude/skills/`
+- ZCode 和 DeepSeek Harness：按[应用适配说明](skills/show-me/references/hosts.md)选择安装方式。通过 ZIP 导入时，使用发布包，`SKILL.md` 位于压缩包根目录。
 
-If `show-me` is already installed, compare or back it up before replacing it.
-Start a new session and ask the agent to load this copy. The optional scripts
-need Node 20 or later; the presentation guidance does not require Node.
+如果已经装有同名的 `show-me`，先比较内容或备份，再替换。安装后开启新会话，让助手加载 `show-me`，确认它加载的是刚安装的版本。
 
-## How it fits your app
+附带的脚本需要 Node 20 或更新版本；只使用回答形式的指导时，无需 Node。
 
-The skill uses the active host's renderer, question controls and follow-up API.
-Read the [host reference](skills/show-me/references/hosts.md) for the route your
-app supports. In a client without interactive views or a waiting local command,
-the conversation continues with text, tables or native questions.
+## 在不同应用中使用
 
-Finished files open in the host's preview when supported, otherwise in the
-operating system's default application. Local HTML uses the default browser.
-An explicit request for a file, report, website or export sets the deliverable.
+[应用适配说明](skills/show-me/references/hosts.md)涵盖 Codex、ZCode、Claude Desktop 的 Code 页和 DeepSeek Harness。助手会先检查当前会话的工具，再选择聊天内视图、应用预览或系统默认浏览器。页面能否显示、修改能否回传、任务能否继续，需要分别检查；缺少接收能力时，使用应用自带的提问功能或继续聊天。
 
-## Batch edits
+DeepSeek Harness 的会话里显示的是 HTML 附件。你点开附件，才会在右侧看到图表或交互页面。
 
-The [batch text example](https://ninondev.github.io/show-me/operations.html) learns
-bounded transformations from examples and previews their effect on a whole batch.
-Save an operation to reuse it without model calls. This is an optional workflow
-for repeated text tasks; [its guide](skills/show-me/references/operations.md)
-covers JSON input, supported transformations and CLI execution.
+查看做好的内容时，优先使用应用支持的预览工具，否则使用系统默认应用。通过系统打开本地 HTML 文件时，使用默认浏览器。
 
-## Contributing
+偏好的画图格式等个人习惯，写在自己的助手规则里。你明确要求文件、报告、网站或导出时，助手会按要求交付。
+
+## 参与改进
 
 ```sh
 node --test tests/*.test.mjs
 node scripts/build-demo.mjs
 ```
 
-Tests cover handoff validation, uncertain delivery, repeated submission, local
-receivers, draft persistence, host isolation and the batch-operation engine. The [evaluation cases](evals/cases.json)
-and [rubric](evals/rubric.md) cover the agent's behavior. Exercise host integration
-in a real conversation and distinguish sending a response from completing work.
+自动测试覆盖修改校验、重复提交、回传状态不明、草稿恢复、应用间隔离、本机接收器和批量处理。
 
-To compare effort or cost, include preparing the view, reviewing it and continuing
-the task. Total human time and model-token savings have not been measured.
+[评估用例](evals/cases.json)涵盖呈现形式、方案选择、文件导出和缺少工具的情形。用新会话运行这些用例，结束后再把单独的[评分标准](evals/rubric.md)交给评审者，用来检查回答。
 
-## Origin and license
+在改动涉及的应用中，检查内容显示、按钮操作、主题和文件打开情况，并说明做过哪些检查。
 
-Derived from [Charlie947's show-me](https://github.com/charlie947/show-me),
-at commit [`69e488e`](https://github.com/charlie947/show-me/blob/69e488e301e8d6f43b8ddc883cb2392b1dd45264/skills/show-me/SKILL.md).
-The original centers on HTML previews. This derivative draws on GPT-6's
-Intelligent UI to choose a presentation for each answer, with conversation
-views and interaction supplied by the app.
+比较时间或成本时，要把准备视图、检查内容和继续任务都算进去。目前尚未测量总耗时和模型 token 的节省量。
 
-It retains the original's practice of showing visual choices before asking,
-making alternatives structurally distinct, and checking that finished work
-was presented.
+## 来源与许可
 
-MIT licensed. The original copyright notice is preserved in [LICENSE](LICENSE)
-and in the installable skill folder.
+本项目衍生自 [Charlie Hills 的 show-me](https://github.com/charlie947/show-me)，基于提交 [`69e488e`](https://github.com/charlie947/show-me/blob/69e488e301e8d6f43b8ddc883cb2392b1dd45264/skills/show-me/SKILL.md)。原版以 HTML 预览为主；这个版本受到 GPT-6 Intelligent UI 的启发，根据每次问题选择呈现形式，通过应用已有的工具在对话中显示内容、提供交互。
+
+它保留了原版的做法：先展示视觉方案，再询问选择；备选方案要有结构上的区别；做完后检查内容是否已经展示出来。
+
+采用 MIT 许可证。原作者的版权声明保留在根目录的 [LICENSE](LICENSE) 和可安装的 skill 文件夹中。
