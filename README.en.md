@@ -33,6 +33,10 @@ After installing, ask your agent to use `show-me` on the current task.
 The project name is 给我看看！; the repository URL, skill directory and invocation
 remain `show-me`.
 
+Chinese requests such as “给我看看这两种布局” can also prompt a preview when the
+context calls for one. “给我看看” is a contextual cue, not a command to turn every
+answer into a visual. Debugging and simple questions keep their usual workflow.
+
 | Ask | Useful response |
 | --- | --- |
 | “How many minutes are in two hours?” | A direct answer |

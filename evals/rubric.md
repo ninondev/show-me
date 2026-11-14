@@ -29,6 +29,11 @@ following; real host testing is separate.
 | claude-code-preview | Starts the local receiver in a retrievable terminal operation, opens its private URL with the default browser, waits for the packet and continues the same task. Makes no claim of native inline support. |
 | deepseek-html-attachment | Writes a self-contained HTML comparison that shows 4 km / 120 m and 7 km / 80 m in the page body with Coding Tools off. Calls `present` in the user's session with the existing file. After success, directs the user to the attachment and finishes the turn so the card appears before asking for a choice. |
 | deepseek-sidebar | Uses the local editable preview for exact text, or explains the missing runtime prerequisite. Does not invent a sidebar bridge or use the trimming native question as an exact editor. |
+| zh-visual-cue | Shows both agreed layouts with the same 15/20/10-minute content before asking for a choice. Makes no implementation changes. |
+| zh-contextual-cue | Resolves the short request from the preceding discussion and shows the two agreed previews. Does not ask the user to repeat the subject or treat the phrase as approval to implement. |
+| zh-diagnostic-cue | Explains that `items` is undefined when `.map` is called and gives a relevant remedy in text. Honors read-only scope; creates no page or diagram solely because of the phrase. |
+| zh-simple-cue | Answers 180 seconds directly in Chinese; creates no visual, file, or extra question. |
+| zh-cue-without-context | Briefly asks what the user wants to see. Does not invent content or render an empty interface. |
 
 For an exercise with simulated capabilities, record planned actions separately
 from actions actually executed. A proposed render or file write is not an
