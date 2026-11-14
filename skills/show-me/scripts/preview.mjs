@@ -51,7 +51,7 @@ export async function serveSession(session, {host, language = 'en', timeoutMs = 
   origin = 'http://127.0.0.1:' + server.address().port;
   try {
     const fragment = await renderEdit(snapshot, {host, language, local:{origin,token}});
-    page = '<!doctype html><html lang="' + language + '"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>给我看看！</title><style>' + style + '</style></head><body><main>' + fragment + '</main></body></html>';
+    page = '<!doctype html><html lang="' + language + '"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>让我看看</title><style>' + style + '</style></head><body><main>' + fragment + '</main></body></html>';
   } catch (error) { server.close(); throw error; }
   function close() {
     if (accepted) return;

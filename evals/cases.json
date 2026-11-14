@@ -117,26 +117,26 @@
   {
     "id": "zh-visual-cue",
     "environment": "An inline preview tool is available. The conversation has established two study-plan layouts: a chronological timeline and a task checklist. Both contain reading for 15 minutes, practice for 20 minutes, and recall for 10 minutes. The user has authorized previews only.",
-    "request": "给我看看这两种布局。"
+    "request": "让我看看这两种布局。"
   },
   {
     "id": "zh-contextual-cue",
     "environment": "An inline preview tool is available. The immediately preceding discussion agreed to compare a chronological timeline and a task checklist for the same study plan: reading for 15 minutes, practice for 20 minutes, and recall for 10 minutes. Neither preview has been shown. Implementation remains pending the user's choice.",
-    "request": "给我看看！"
+    "request": "让我看看！"
   },
   {
     "id": "zh-diagnostic-cue",
     "environment": "The user supplied this JavaScript: const items = undefined; items.map(x => x.name). The error is TypeError: Cannot read properties of undefined (reading 'map'). Text replies, an inline renderer, and file editing are available.",
-    "request": "给我看看这个报错，先别改代码。"
+    "request": "让我看看这个报错，先别改代码。"
   },
   {
     "id": "zh-simple-cue",
     "environment": "Text replies and an inline renderer are available.",
-    "request": "给我看看，3 分钟是多少秒？直接告诉我就行。"
+    "request": "让我看看，3 分钟是多少秒？直接告诉我就行。"
   },
   {
     "id": "zh-cue-without-context",
     "environment": "This is the first message. No file, attachment, selected content, or earlier task is available. Text replies and an inline renderer are available.",
-    "request": "给我看看"
+    "request": "让我看看"
   }
 ]

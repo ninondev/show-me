@@ -7,7 +7,7 @@ import {randomUUID} from 'node:crypto';
 import ops from './operation-core.cjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
-const help = `给我看看！ operations (Node 20+)
+const help = `让我看看 operations (Node 20+)
 
   node operate.mjs render DATA.json --out TOOL.html [--field text]
   node operate.mjs infer DATA.json EXAMPLES.json [--field text] [--out RULES.json]

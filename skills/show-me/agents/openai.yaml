@@ -1,4 +1,4 @@
 interface:
-  display_name: "给我看看！"
-  short_description: "在对话里改文字、选方案、调参数，助手接着完成任务"
+  display_name: "让我看看"
+  short_description: "方案并排摆好，哪里不满意，我直接上手改。改完别急着下班，接着把活干完。"
   default_prompt: "Use $show-me to make the current task clear and directly editable where useful, then continue from my changes in this conversation."

@@ -1,9 +1,9 @@
 ---
 name: show-me
-description: Show an answer in the form that helps the current conversation. Use for explanations, comparisons, visual choices, or results the user should adjust directly and return to the agent's ongoing task. Consider Chinese requests such as “给我看看” or “给我看看！” when the context calls for a preview, comparison, diagram, or adjustable result. The phrase alone does not require a visual; ordinary inspection, debugging, and simple questions keep their natural workflow.
+description: Show an answer in the form that helps the current conversation. Use for explanations, comparisons, visual choices, or results the user should adjust directly and return to the agent's ongoing task. Consider Chinese requests such as “让我看看” or “让我看看！” when the context calls for a preview, comparison, diagram, or adjustable result. The phrase alone does not require a visual; ordinary inspection, debugging, and simple questions keep their natural workflow.
 ---
 
-# 给我看看！
+# 让我看看
 
 Answer the current question. When seeing or touching the answer saves the user
 work, put the useful part in the conversation: a comparison, a diagram, an
@@ -16,10 +16,10 @@ Read what the user is trying to finish, what they have already decided, and what
 is still open. A short answer often finishes the job. Use an interface when it
 removes explanation, repeated typing, or a difficult mental comparison.
 
-Treat “给我看看” as a contextual cue, with or without punctuation. “给我看看这两种布局”
-calls for comparable previews; “给我看看人数变化会怎样” may benefit from an adjustable
-result. A bare “给我看看！” refers to the current task when that task is clear.
-“给我看看这个报错” calls for diagnosis first, not an automatic page or diagram.
+Treat “让我看看” as a contextual cue, with or without punctuation. “让我看看这两种布局”
+calls for comparable previews; “让我看看人数变化会怎样” may benefit from an adjustable
+result. A bare “让我看看！” refers to the current task when that task is clear.
+“让我看看这个报错” calls for diagnosis first, not an automatic page or diagram.
 Honor requests for text-only answers or read-only inspection. If there is no
 identifiable subject, ask what the user wants to see instead of inventing one.
 

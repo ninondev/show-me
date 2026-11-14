@@ -1,8 +1,8 @@
-# 给我看看！
+# 让我看看
 
 English | [简体中文](README.md)
 
-给我看看！ helps coding agents put useful views inside the conversation, then
+让我看看 helps coding agents put useful views inside the conversation, then
 continue the task from what you edit, choose or adjust.
 
 A short question still gets a short answer. When a view helps, it starts with
@@ -30,11 +30,11 @@ editor for Claude Desktop's Code tab and the experimental DeepSeek route.
 ## Use it
 
 After installing, ask your agent to use `show-me` on the current task.
-The project name is 给我看看！; the repository URL, skill directory and invocation
+The project name is 让我看看; the repository URL, skill directory and invocation
 remain `show-me`.
 
-Chinese requests such as “给我看看这两种布局” can also prompt a preview when the
-context calls for one. “给我看看” is a contextual cue, not a command to turn every
+Chinese requests such as “让我看看这两种布局” can also prompt a preview when the
+context calls for one. “让我看看” is a contextual cue, not a command to turn every
 answer into a visual. Debugging and simple questions keep their usual workflow.
 
 | Ask | Useful response |
